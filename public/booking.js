@@ -1,4 +1,4 @@
-import {SERVICES,TIERS,displayTime,durationFor,dateInLA,monthLimit} from './booking-config.js';
+import {SERVICES,TIERS,TIMES,validateSlot,displayTime,durationFor,dateInLA,monthLimit} from './booking-config.js';
 const $=s=>document.querySelector(s),form=$('#booking-form');let step=0,chosenTime='',open=false,activeToken='',config={};let slotVersion=0;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function api(url,options){const r=await fetch(url,options);const data=await r.json();if(!r.ok)throw new Error(data.error||'Please try again.');return data;}
@@ -15,18 +15,26 @@ function sync(){
  $('#deposit-amount').textContent=`$${deposit}`;$('#deposit-note').textContent=deposit===35?'Includes the $15 early appointment fee.':'Applied toward your appointment.';
 }
 function showStep(n){step=n;document.querySelectorAll('[data-step]').forEach(el=>el.hidden=Number(el.dataset.step)!==step);document.querySelectorAll('[data-step-indicator]').forEach(el=>el.classList.toggle('active',Number(el.dataset.stepIndicator)===step));$('#back').hidden=step===0;$('#next').hidden=step===2;$('#submit-booking').hidden=step!==2;$('#next').textContent=step===0?'Choose a time':'Your details';$('#form-error').textContent='';document.querySelector(`[data-step="${step}"] h2`).setAttribute('tabindex','-1');document.querySelector(`[data-step="${step}"] h2`).focus({preventScroll:true});}
+function renderSlots(times){
+ times.forEach(time=>{const b=document.createElement('button');b.type='button';b.className='slot';b.textContent=displayTime(time);b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>{chosenTime=time;document.querySelectorAll('.slot').forEach(el=>el.setAttribute('aria-pressed',String(el===b)));$('#form-error').textContent='';sync();});$('#slot-options').append(b);});
+}
 async function loadSlots(){
  chosenTime='';sync();const version=++slotVersion;$('#slot-options').replaceChildren();const v=values();if(!v.date){$('#slot-message').textContent='Choose a date to check availability.';return;}
- if(!open){$('#slot-message').textContent='Online availability will open after Joane completes setup. Text her to request a visit.';return;}
+ if(!open){
+  const times=TIMES.filter(time=>{try{validateSlot(v.date,time);return true;}catch{return false;}});
+  renderSlots(times);
+  $('#slot-message').textContent=times.length?'Standard schedule preview · All times are Pacific. Select a time to explore the form; availability is not verified and no appointment is held.':'No standard online times for this date. Choose Tuesday–Saturday, at least 24 hours ahead and within one month. Text Joane for same-day requests.';
+  return;
+ }
  $('#slot-message').textContent='Checking availability…';
  try{
   const data=await api(`/api/booking?${new URLSearchParams({...v,action:'availability'})}`);if(version!==slotVersion)return;
   $('#slot-message').textContent=data.slots.length?'Choose a start time. Your request will hold the full appointment duration.':'No online times available for this date and location. Try another date or text Joane.';
-  data.slots.forEach(time=>{const b=document.createElement('button');b.type='button';b.className='slot';b.textContent=displayTime(time);b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>{chosenTime=time;document.querySelectorAll('.slot').forEach(el=>el.setAttribute('aria-pressed',String(el===b)));sync();});$('#slot-options').append(b);});
+  renderSlots(data.slots);
  }catch(error){if(version===slotVersion)$('#slot-message').textContent=error.message;}
 }
 form.addEventListener('change',e=>{sync();if(['date','location','service','tier','removal'].includes(e.target.name))loadSlots();});
-$('#next').addEventListener('click',()=>{const v=values();if(step===0&&v.service==='fill'&&!form.elements.ownWork.checked){$('#form-error').textContent='Fills are for Joane’s sets within 3½ weeks. Select a new set and removal, or text her to discuss.';return;}if(step===1&&!chosenTime){$('#form-error').textContent='Choose an available appointment time first.';return;}showStep(step+1);});
+$('#next').addEventListener('click',()=>{const v=values();if(step===0&&v.service==='fill'&&!form.elements.ownWork.checked){$('#form-error').textContent='Fills are for Joane’s sets within 3½ weeks. Select a new set and removal, or text her to discuss.';return;}if(step===1&&!chosenTime){$('#form-error').textContent=open?'Choose an available appointment time first.':'Choose a standard appointment time to continue the preview.';return;}showStep(step+1);});
 $('#back').addEventListener('click',()=>showStep(step-1));
 form.addEventListener('submit',async e=>{
  e.preventDefault();if(!open||!chosenTime){$('#form-error').textContent='Online booking is not available yet. Please text Joane.';return;}
@@ -50,4 +58,5 @@ async function loadReceipt(){
 $('#refresh-status').addEventListener('click',()=>loadReceipt().catch(e=>$('#receipt-copy').textContent=e.message));
 sync();
 try{config=await api('/api/booking?action=config');open=config.open;form.elements.date.min=config.minDate;form.elements.date.max=config.maxDate;if(!open){$('#setup-message').hidden=false;$('#setup-message').innerHTML='Online booking is being prepared. You can explore the form; no appointment will be held. <a href="sms:+19094969487">Text Joane to request a visit.</a>';$('#submit-booking').disabled=true;}}catch{$('#setup-message').hidden=false;$('#setup-message').textContent='Online booking is unavailable. Text Joane at 909-496-9487.';}
+if(form.elements.date.value)await loadSlots();
 const fragment=location.hash.slice(1);if(/^[A-Za-z0-9_-]{43}$/.test(fragment)){activeToken=fragment;try{await loadReceipt();}catch(e){$('#setup-message').hidden=false;$('#setup-message').textContent=e.message;}}
