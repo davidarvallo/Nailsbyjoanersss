@@ -1,0 +1,35 @@
+import {SERVICES,TIERS,TIMES,displayTime,dateInLA} from './booking-config.js';
+const $=s=>document.querySelector(s);let bookings=[],dates={};
+const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const dateLabel=value=>new Intl.DateTimeFormat('en-US',{timeZone:'America/Los_Angeles',dateStyle:'medium',timeStyle:'short'}).format(new Date(value));
+async function api(body){const r=await fetch(body?'/api/booking':'/api/booking?action=admin',body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{});const data=await r.json();if(!r.ok)throw Object.assign(new Error(data.error||'Please try again.'),{status:r.status});return data;}
+function message(value){$('#admin-message').textContent=value;}
+function renderOverrides(){const root=$('#overrides');root.replaceChildren();Object.entries(dates).sort().forEach(([date,loc])=>{const p=document.createElement('p');p.textContent=`${date} · ${loc==='closed'?'Day off':loc}`;const b=document.createElement('button');b.type='button';b.textContent='Remove';b.onclick=()=>{delete dates[date];renderOverrides();};p.append(b);root.append(p);});}
+function render(){
+ $('#stats').innerHTML=[['pending','Awaiting approval'],['confirmed','Confirmed'],['blocked','Time blocks']].map(([s,label])=>`<div><strong>${bookings.filter(b=>b.status===s&&new Date(b.end_at)>new Date()).length}</strong><span>${label}</span></div>`).join('');
+ const filter=$('#filter').value;const rows=bookings.filter(b=>filter==='all'||b.status===filter).sort((a,b)=>new Date(a.start_at)-new Date(b.start_at));const root=$('#requests');root.replaceChildren();
+ if(!rows.length){const p=document.createElement('p');p.className='notice';p.textContent='No requests in this view.';root.append(p);}
+ rows.forEach(b=>{
+  const d=b.data,card=document.createElement('article');card.className='request-card';
+  card.innerHTML=`<div class="request-top"><h3>${esc(d.name||d.note||'Time block')}</h3><span class="status ${esc(b.status)}">${esc(b.status)}</span></div><p><strong>${esc(dateLabel(b.start_at))} Pacific</strong> · ${Math.round((new Date(b.end_at)-new Date(b.start_at))/60000)} minutes</p><p>${esc(d.location||'Shared calendar')} · ${esc(SERVICES.find(s=>s.id===d.service)?.name||'Unavailable')}</p>${d.service?`<p>${esc(TIERS.find(t=>t.id===d.tier)?.name)} · ${esc(d.length||'Length to discuss')}${d.removal?' · Removal requested':''}${d.shapeChange?' · Shape change +$5':''}</p><p>Deposit: $${Number(d.deposit)} · ${b.deposit_verified?'Verified':'Not verified'} · Reference ${esc(b.id)}</p>`:''}${d.phone?`<p>${esc(d.phone)}${d.email?' · '+esc(d.email):''}</p>`:''}${d.notes?`<p>${esc(d.notes)}</p>`:''}${b.status==='pending'?`<p>Hold ends ${esc(dateLabel(b.expires_at))} Pacific</p>`:''}`;
+  if(d.phone){const text=document.createElement('a');text.className='button outline';text.href=`sms:${d.phone.replace(/[^+\d]/g,'')}`;text.textContent='Text client';card.append(text);}
+  const action=(label,operation)=>{const button=document.createElement('button');button.className='button '+(operation==='confirm'?'gold':'outline');button.textContent=label;button.onclick=async()=>{
+   const question=operation==='confirm'?`Have you verified the $${d.deposit} deposit and approved this appointment?`:operation==='cancel'&&b.status==='confirmed'?'Cancel this visit? Contact the client to offer a refund or another time if you are canceling.':'Release this appointment time?';
+   if(!confirm(question))return;button.disabled=true;try{await api({action:'manage',id:b.id,operation,verified:operation==='confirm'});message('Saved. Notify your client using the text link.');await load();}catch(e){message(e.message);}finally{button.disabled=false;}
+  };card.append(button);};
+  if(b.status==='pending'){action('Deposit verified · Confirm','confirm');action('Decline request','decline');}
+  if(['pending','confirmed'].includes(b.status)){
+   const adjust=document.createElement('button');adjust.className='button outline';adjust.textContent='Adjust time / duration';adjust.onclick=()=>{const f=$('#reschedule-form');f.elements.id.value=b.id;f.elements.date.value=dateInLA(new Date(b.start_at));const parts=new Intl.DateTimeFormat('en-GB',{timeZone:'America/Los_Angeles',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date(b.start_at));f.elements.time.value=parts;f.elements.location.value=d.location;f.elements.duration.value=Math.round((new Date(b.end_at)-new Date(b.start_at))/60000);$('#reschedule-error').textContent='';$('#reschedule-dialog').showModal();};card.append(adjust);
+  }
+  if(['confirmed','blocked'].includes(b.status))action(b.status==='blocked'?'Release block':'Cancel visit','cancel');root.append(card);
+ });
+}
+async function load(){try{const data=await api();bookings=data.bookings;$('#login-form').hidden=true;$('#dashboard').hidden=false;$('#settings-form').elements.open.checked=data.settings.open===true;$('#settings-form').elements.paymentInstructions.value=data.settings.paymentInstructions||'';dates=data.settings.dates||{};renderOverrides();render();if(!data.enabled)message('Online booking is locked until deployment setup is complete. You can prepare your payment instructions and calendar here.');}catch(e){if(e.status===401){$('#login-form').hidden=false;$('#dashboard').hidden=true;}else message(e.message);}}
+$('#login-form').onsubmit=async e=>{e.preventDefault();const b=e.submitter;b.disabled=true;try{await api({action:'login',password:e.target.elements.password.value});e.target.reset();message('');await load();}catch(error){message(error.message);}finally{b.disabled=false;}};
+$('#filter').onchange=render;$('#refresh').onclick=load;$('#logout').onclick=async()=>{await api({action:'logout'});$('#dashboard').hidden=true;$('#login-form').hidden=false;bookings=[];message('Signed out.');};
+$('#add-override').onclick=()=>{const f=$('#settings-form');if(!f.elements.overrideDate.value)return;dates[f.elements.overrideDate.value]=f.elements.overrideLocation.value;renderOverrides();};
+$('#settings-form').onsubmit=async e=>{e.preventDefault();try{await api({action:'settings',open:e.target.elements.open.checked,paymentInstructions:e.target.elements.paymentInstructions.value,dates});message('Booking settings saved.');await load();}catch(error){message(error.message);}};
+['block-times','reschedule-times'].forEach(id=>$('#'+id).innerHTML=TIMES.map(t=>`<option value="${t}">${displayTime(t)}</option>`).join(''));
+$('#block-form').onsubmit=async e=>{e.preventDefault();try{await api({...Object.fromEntries(new FormData(e.target)),action:'block'});message('Time blocked.');await load();}catch(error){message(error.message);}};
+$('#reschedule-form').onsubmit=async e=>{e.preventDefault();try{await api({...Object.fromEntries(new FormData(e.target)),action:'manage',operation:'reschedule'});$('#reschedule-dialog').close();message('Appointment adjusted. Notify the client using the text link.');await load();}catch(error){$('#reschedule-error').textContent=error.message;}};
+$('.close-dialog').onclick=()=>$('#reschedule-dialog').close();await load();

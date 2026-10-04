@@ -1,0 +1,56 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
+import {PGlite} from '@electric-sql/pglite';
+import {validateSlot,localInstant,holdExpiry,monthLimit,durationFor} from '../public/booking-config.js';
+import {authorized,cookie,session,verifyPassword} from '../lib/auth.js';
+import {scryptSync} from 'node:crypto';
+test('Pacific booking rules, month boundaries and DST',()=>{
+ const now=new Date('2026-10-04T21:00:00Z');
+ assert.equal(validateSlot('2026-10-06','06:00',now).toISOString(),'2026-10-06T13:00:00.000Z');
+ assert.throws(()=>validateSlot('2026-10-05','08:30',now));
+ assert.throws(()=>validateSlot('2026-10-10','19:30',now));
+ assert.throws(()=>validateSlot('2026-10-32','08:30',now));
+ assert.throws(()=>validateSlot('2026-11-05','08:30',now));
+ assert.throws(()=>validateSlot('2026-10-06','06:00',new Date('2026-10-05T15:00:00Z')));
+ assert.equal(holdExpiry(now).toISOString(),'2026-10-05T07:00:00.000Z');
+ assert.equal(localInstant('2026-11-03','06:00').toISOString(),'2026-11-03T14:00:00.000Z');
+ assert.equal(holdExpiry(new Date('2026-11-01T19:00:00Z')).toISOString(),'2026-11-02T08:00:00.000Z');
+ assert.equal(monthLimit(new Date('2027-01-31T20:00:00Z')),'2027-02-28');
+ assert.equal(durationFor('acrylic','tier4'),180);assert.equal(durationFor('acrylic','none',true),180);assert.equal(durationFor('fill','tier2'),150);
+});
+test('private admin session rejects tampering and missing configuration',()=>{
+ process.env.SESSION_SECRET='test-only-secret-with-sufficient-entropy';const salt='test-salt';process.env.ADMIN_PASSWORD_HASH=salt+':'+scryptSync('private-password',salt,64).toString('hex');
+ assert.equal(verifyPassword('private-password'),true);assert.equal(verifyPassword('wrong'),false);
+ const token=session();assert.equal(authorized({headers:{cookie:`joane_session=${token}`}}),true);
+ assert.equal(authorized({headers:{cookie:`joane_session=${token}bad`}}),false);assert.equal(authorized({headers:{}}),false);
+ assert.match(cookie(token),/HttpOnly/);assert.match(cookie(token),/SameSite=Strict/);
+ delete process.env.SESSION_SECRET;assert.equal(authorized({headers:{cookie:`joane_session=${token}`}}),false);delete process.env.ADMIN_PASSWORD_HASH;
+});
+test('database reserves across both locations, releases expired holds, checks adjustments',async()=>{
+ const pg=new PGlite();await pg.exec(readFileSync(new URL('../lib/schema.sql',import.meta.url),'utf8'));
+ const reserve=async(id,start,end,expiry='2099-01-01T00:00:00Z',block=false)=>{const r=await pg.query('SELECT reserve_booking($1,$2,$3,$4,$5,$6::jsonb,$7) AS result',[id,'hash-'+id,start,end,expiry,JSON.stringify({location:id==='b'?'San Jacinto':'San Bernardino'}),block]);return r.rows[0].result;};
+ assert.equal(await reserve('a','2098-10-06T13:00Z','2098-10-06T16:00Z'),'ok');
+ assert.equal(await reserve('b','2098-10-06T15:30Z','2098-10-06T18:00Z'),'conflict');
+ assert.equal(await reserve('c','2098-10-06T16:00Z','2098-10-06T18:30Z'),'ok');
+ const manage=async(id,action,start=null,end=null)=>{const r=await pg.query('SELECT manage_booking($1,$2,$3,$4,$5) AS result',[id,action,start,end,'San Bernardino']);return r.rows[0].result;};
+ assert.equal(await manage('a','confirm'),'ok');assert.equal((await pg.query("SELECT deposit_verified FROM bookings WHERE id='a'")).rows[0].deposit_verified,true);
+ assert.equal(await manage('a','reschedule','2098-10-06T15:00Z','2098-10-06T17:00Z'),'conflict');
+ assert.equal(await manage('c','decline'),'ok');assert.equal(await reserve('b','2098-10-06T16:00Z','2098-10-06T18:30Z'),'ok');
+ assert.equal(await reserve('expired','2098-10-07T13:00Z','2098-10-07T15:30Z','2000-01-01T00:00Z'),'ok');
+ assert.equal(await manage('expired','confirm'),'invalid');
+ assert.equal(await reserve('new','2098-10-07T13:00Z','2098-10-07T15:30Z'),'ok');
+ assert.equal(await reserve('block','2098-10-08T13:00Z','2098-10-08T15:30Z','2099-01-01T00:00Z',true),'ok');
+ assert.equal(await reserve('clash','2098-10-08T14:00Z','2098-10-08T16:00Z'),'conflict');
+ assert.equal(await manage('block','cancel'),'ok');await pg.close();
+});
+test('API fails closed without setup and rejects unauthenticated management',async()=>{
+ const {default:handler}=await import('../api/booking.js');
+ const call=async(req)=>{let status,data;const res={setHeader(){},status(s){status=s;return this;},json(d){data=d;}};await handler({headers:{host:'studio.test'},query:{},...req},res);return {status,data};};
+ delete process.env.DATABASE_URL;delete process.env.SESSION_SECRET;delete process.env.ADMIN_PASSWORD_HASH;
+ assert.equal((await call({method:'GET',query:{action:'config'}})).data.open,false);
+ assert.equal((await call({method:'POST',headers:{host:'studio.test',origin:'https://malicious.test'},body:{action:'reserve'}})).status,403);
+ assert.equal((await call({method:'POST',headers:{host:'studio.test',origin:'https://studio.test'},body:{action:'reserve'}})).status,503);
+ process.env.DATABASE_URL='postgresql://unused.test/db';process.env.SESSION_SECRET='test';process.env.ADMIN_PASSWORD_HASH='test';
+ assert.equal((await call({method:'GET',query:{action:'admin'}})).status,401);
+ assert.equal((await call({method:'POST',headers:{host:'studio.test',origin:'https://studio.test'},body:{action:'manage',id:'anything',operation:'confirm',verified:true}})).status,401);
+ delete process.env.DATABASE_URL;delete process.env.SESSION_SECRET;delete process.env.ADMIN_PASSWORD_HASH;
+});
