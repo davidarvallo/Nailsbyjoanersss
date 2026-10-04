@@ -1,9 +1,9 @@
 const dialog = document.querySelector('#info-dialog');
 const title = document.querySelector('#dialog-title');
 const copy = document.querySelector('#dialog-copy');
-document.querySelectorAll('[data-book],[data-service]').forEach(button => button.addEventListener('click', () => {
+document.querySelectorAll('[data-service]').forEach(button => button.addEventListener('click', () => {
   title.textContent = button.dataset.service || 'Booking is coming soon.';
-  copy.textContent = button.dataset.service ? 'This service link will be connected after the landing-page design is approved. Explore the menu and policies for now, or contact Joane with a question. No appointment has been reserved.' : 'This is a preview of the new website. Online booking and payment links will be connected after the design is approved. No appointment has been reserved.';
+  copy.textContent = button.dataset.service ? 'Service-specific links are coming soon. Use Request an appointment to browse available services in Setmore, or text Joane with a question. No appointment has been reserved.' : 'This is a preview of the new website. Online booking and payment links will be connected after the design is approved. No appointment has been reserved.';
   dialog.showModal();
 }));
 document.querySelectorAll('.close-dialog,.close-secondary').forEach(button => button.addEventListener('click', () => dialog.close()));
