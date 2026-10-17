@@ -1,7 +1,7 @@
 import {SERVICES,TIERS,TIMES,validateSlot,displayTime,durationFor,dateInLA,monthLimit,PEDICURES,validateSeason} from './booking-config.js';
 const $=s=>document.querySelector(s),form=$('#booking-form');let step=0,chosenTime='',open=false,activeToken='',config={};let slotVersion=0;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-async function api(url,options){throw new Error('Review mockup only. No appointment is submitted.');const r=await fetch(url,options);const data=await r.json();if(!r.ok)throw new Error(data.error||'Please try again.');return data;}
+async function api(url,options){const r=await fetch(url,options);const data=await r.json();if(!r.ok)throw new Error(data.error||'Please try again.');return data;}
 $('#services-options').innerHTML=SERVICES.map((s,i)=>`<label class="choice"><input type="radio" name="service" value="${s.id}" ${i===0?'checked':''}><strong>${s.name}</strong><span>${s.price?`$${s.price} · ${s.duration} min`:"Price quoted by Joane"}</span></label>`).join('');
 $('#tier-options').innerHTML=TIERS.map((t,i)=>`<label class="art-choice"><input type="radio" name="tier" value="${t.id}" ${i===0?'checked':''}><strong>${t.name}${t.description?`<small class="tier-description">${esc(t.description)}</small>`:""}</strong><span>${t.price}</span></label>`).join('');
 $('#pedicure-options').innerHTML='<option value="">No pedicure</option>'+PEDICURES.map(s=>`<option value="${s.id}">${s.name} · $${s.price} · ${s.duration} min</option>`).join('');
@@ -23,12 +23,7 @@ function renderSlots(times){
 async function loadSlots(){
  chosenTime='';sync();const version=++slotVersion;$('#slot-options').replaceChildren();const v=values();if(!v.date){$('#slot-message').textContent='Choose a date to check availability.';return;}
  try{validateSeason(v.service,v.date);}catch(e){$('#slot-message').textContent=e.message;return;}
- if(!open){
-  const times=TIMES.filter(time=>{try{validateSlot(v.date,time);return true;}catch{return false;}});
-  renderSlots(times);
-  $('#slot-message').textContent=times.length?'Standard schedule preview · All times are Pacific. Select a time to explore the form; availability is not verified and no appointment is held.':'No standard online times for this date. Choose Tuesday–Saturday, at least 24 hours ahead and within one month. Text Joane for same-day requests.';
-  return;
- }
+ if(!open){$('#slot-message').textContent='Online booking is being prepared. Text Joane to arrange an appointment.';return;}
  $('#slot-message').textContent='Checking availability…';
  try{
   const data=await api(`/api/booking?${new URLSearchParams({...v,action:'availability'})}`);if(version!==slotVersion)return;
@@ -37,7 +32,7 @@ async function loadSlots(){
  }catch(error){if(version===slotVersion)$('#slot-message').textContent=error.message;}
 }
 form.addEventListener('change',e=>{sync();if(['date','location','service','tier','removal','pedicure'].includes(e.target.name))loadSlots();});
-$('#next').addEventListener('click',()=>{const v=values();if(step===1&&!chosenTime){$('#form-error').textContent=open?'Choose an available appointment time first.':'Choose a standard appointment time to continue the preview.';return;}showStep(step+1);});
+$('#next').addEventListener('click',()=>{const v=values();if(step===1&&!chosenTime){$('#form-error').textContent=open?'Choose an available appointment time first.':'Online booking is not open yet. Text Joane to arrange an appointment.';return;}showStep(step+1);});
 $('#back').addEventListener('click',()=>showStep(step-1));
 form.addEventListener('submit',async e=>{
  e.preventDefault();if(!open||!chosenTime){$('#form-error').textContent='Online booking is not available yet. Please text Joane.';return;}
@@ -61,4 +56,12 @@ async function loadReceipt(){
 $('#refresh-status').addEventListener('click',()=>loadReceipt().catch(e=>$('#receipt-copy').textContent=e.message));
 sync();
 
-$('#setup-message').hidden=false;$('#setup-message').textContent='Review mockup · Try the booking steps. No appointment or payment will be submitted.';$('#submit-booking').disabled=true;
+$('#submit-booking').disabled=true;
+try{
+ config=await api('/api/booking?action=config');open=config.open===true;
+ form.elements.date.min=config.minDate;form.elements.date.max=config.maxDate;
+ $('#submit-booking').disabled=!open;
+ if(!open){$('#setup-message').hidden=false;$('#setup-message').textContent='Online booking is being prepared. Text Joane at 909-496-9487 to arrange your visit.';}
+}catch{open=false;$('#setup-message').hidden=false;$('#setup-message').textContent='Online booking is temporarily unavailable. Text Joane at 909-496-9487.';}
+if(form.elements.date.value)await loadSlots();
+const fragment=location.hash.slice(1);if(/^[A-Za-z0-9_-]{43}$/.test(fragment)){activeToken=fragment;try{await loadReceipt();}catch(e){$('#setup-message').hidden=false;$('#setup-message').textContent=e.message;}}
