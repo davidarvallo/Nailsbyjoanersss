@@ -11,7 +11,6 @@
   buffer.width = 800; buffer.height = 800; buffer.alt = '';
   buffer.setAttribute('aria-hidden', 'true');
   stage.append(buffer);
-  const toggle = document.querySelector('#hero-carousel-toggle');
   const counter = document.querySelector('#hero-carousel-count');
   const link = document.querySelector('#hero-carousel-link');
   const status = document.querySelector('#hero-carousel-status');
@@ -19,12 +18,10 @@
   const interval = 6500;
   const cache = new Map();
   let index = 0, desired = 0, busy = false, timer;
-  let userPaused = motion.matches, hovering = false, inView = true, ready = false;
+  let inView = true, ready = false;
   const wrap = value => (value + photos.length) % photos.length;
 
   function updateControls() {
-    toggle.textContent = userPaused ? 'Play' : 'Pause';
-    toggle.setAttribute('aria-label', userPaused ? 'Play slideshow' : 'Pause slideshow');
     root.setAttribute('aria-label', `Joane’s nail art and pedicure portfolio, ${photos.length} photos`);
   }
   function stopTimer() { clearTimeout(timer); timer = undefined; }
@@ -51,13 +48,12 @@
   }
   function schedule() {
     stopTimer();
-    if (!ready || userPaused || hovering || !inView || document.hidden || busy) return;
+    if (!ready || motion.matches || !inView || document.hidden || busy) return;
     timer = setTimeout(() => { desired = wrap(index + 1); show(); }, interval);
     prepare(wrap(index + 1)).catch(() => {});
   }
-  function pause() { userPaused = true; stopTimer(); updateControls(); }
   async function show(manual = false) {
-    if (manual) pause();
+
     if (busy) return;
     stopTimer(); busy = true;
     while (desired !== index) {
@@ -65,7 +61,7 @@
       let loaded;
       try { loaded = await prepare(target); }
       catch {
-        pause(); desired = index;
+        desired = index;
         status.textContent = 'This photo could not load. Your current photo is still available; try another photo.';
         break;
       }
@@ -85,7 +81,7 @@
       const category = photo.category === 'pedicures' ? 'Pedicures' : 'Nails';
       counter.textContent = `${String(index + 1).padStart(2, '0')} / ${photos.length} · ${category}`;
       link.href = `/portfolio#${photo.id}`;
-      if (manual || userPaused) status.textContent = `Photo ${index + 1} of ${photos.length}: ${photo.alt}`;
+      if (manual) status.textContent = `Photo ${index + 1} of ${photos.length}: ${photo.alt}`;
       await new Promise(resolve => setTimeout(resolve, motion.matches ? 0 : 900));
     }
     busy = false; schedule();
@@ -93,16 +89,11 @@
   function move(direction) { desired = wrap(desired + direction); show(true); }
   document.querySelector('#hero-carousel-prev').addEventListener('click', () => move(-1));
   document.querySelector('#hero-carousel-next').addEventListener('click', () => move(1));
-  toggle.addEventListener('click', () => { userPaused = !userPaused; updateControls(); schedule(); });
-  // Keyboard interaction stops automatic movement until the visitor chooses Play.
-  root.addEventListener('focusin', pause);
   root.addEventListener('keydown', event => {
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
       event.preventDefault(); move(event.key === 'ArrowLeft' ? -1 : 1);
     }
   });
-  root.addEventListener('pointerenter', event => { if (event.pointerType === 'mouse') { hovering = true; stopTimer(); } });
-  root.addEventListener('pointerleave', event => { if (event.pointerType === 'mouse') { hovering = false; schedule(); } });
   let touch;
   stage.addEventListener('touchstart', event => {
     const first = event.touches[0]; touch = {x:first.clientX, y:first.clientY};
@@ -118,7 +109,7 @@
     const observer = new IntersectionObserver(entries => { inView = entries[0].isIntersecting; schedule(); }, {threshold:0.1});
     observer.observe(root);
   }
-  motion.addEventListener('change', () => { if (motion.matches) pause(); else schedule(); });
+  motion.addEventListener('change', schedule);
   function start() { if (ready) return; ready = true; updateControls(); schedule(); }
   if (active.complete && active.naturalWidth) start();
   else {

@@ -10,7 +10,7 @@ if(initial.get('removal')==='true'&&form.elements.service.value==='acrylic')form
 form.elements.date.min=dateInLA();form.elements.date.max=monthLimit();
 function values(){return {service:form.elements.service.value,tier:form.elements.tier.value,removal:form.elements.service.value==='acrylic-soak'||form.elements.removal.checked,pedicure:form.elements.pedicure.value,location:form.elements.location.value,date:form.elements.date.value};}
 function sync(){
- const v=values();const fill=v.service==='fill',soak=!['acrylic','acrylic-soak','fill'].includes(v.service);$('#pedicure-field').hidden=soak;$('#pedicure-addon-note').hidden=!(v.service==='pedi1'||v.service==='pedi2'||v.pedicure==='pedi1'||v.pedicure==='pedi2');$('#fill-check').hidden=!fill;$('#shape-check').hidden=!fill;$('#length-field').hidden=soak;$('#art-field').hidden=soak;$('#removal-check').hidden=!fill;
+ const v=values();const fill=v.service==='fill',soak=!['acrylic','acrylic-soak','fill'].includes(v.service);$('#pedicure-field').hidden=soak;$('#pedicure-addon-note').hidden=!(v.service==='pedi1'||v.service==='pedi2'||v.pedicure==='pedi1'||v.pedicure==='pedi2');$('#shape-check').hidden=!fill;$('#length-field').hidden=soak;$('#art-field').hidden=soak;$('#removal-check').hidden=!fill;
  if(soak){form.elements.tier.value='none';form.elements.removal.checked=false;form.elements.pedicure.value='';}
  const data=values();const duration=durationFor(data.service,data.tier,data.service==='acrylic-soak'?false:data.removal,data.pedicure);const tier=TIERS.find(t=>t.id===data.tier);const deposit=chosenTime==='06:00'?35:20;
  $('#summary').innerHTML=[['Service',SERVICES.find(s=>s.id===data.service).name],['Nail art',soak?'Included in selected service':tier.id==='none'?'Solid color included':`${tier.name} (${tier.price})`],['Time reserved',`${Math.floor(duration/60)}h ${duration%60||''}${duration%60?'m':''}`],['Pedicure',PEDICURES.find(s=>s.id===data.pedicure)?.name||'No additional pedicure'],['Service price',SERVICES.find(s=>s.id===data.service).price?`$${SERVICES.find(s=>s.id===data.service).price}`:'Quoted by Joane'],['Location',data.location],['Date',data.date||'To be chosen'],['Time',chosenTime?displayTime(chosenTime):'To be chosen']].map(([k,v])=>`<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('');
@@ -37,13 +37,13 @@ async function loadSlots(){
  }catch(error){if(version===slotVersion)$('#slot-message').textContent=error.message;}
 }
 form.addEventListener('change',e=>{sync();if(['date','location','service','tier','removal','pedicure'].includes(e.target.name))loadSlots();});
-$('#next').addEventListener('click',()=>{const v=values();if(step===0&&v.service==='fill'&&!form.elements.ownWork.checked){$('#form-error').textContent='Fills are for Joane’s sets within 3½ weeks. Select a new set and removal, or text her to discuss.';return;}if(step===1&&!chosenTime){$('#form-error').textContent=open?'Choose an available appointment time first.':'Choose a standard appointment time to continue the preview.';return;}showStep(step+1);});
+$('#next').addEventListener('click',()=>{const v=values();if(step===1&&!chosenTime){$('#form-error').textContent=open?'Choose an available appointment time first.':'Choose a standard appointment time to continue the preview.';return;}showStep(step+1);});
 $('#back').addEventListener('click',()=>showStep(step-1));
 form.addEventListener('submit',async e=>{
  e.preventDefault();if(!open||!chosenTime){$('#form-error').textContent='Online booking is not available yet. Please text Joane.';return;}
  const button=$('#submit-booking');button.disabled=true;button.textContent='Sending request…';$('#form-error').textContent='';
  try{
-  const body=Object.fromEntries(new FormData(form));['removal','shapeChange','ownWork','acceptPolicies'].forEach(k=>body[k]=form.elements[k].checked);body.removal=body.service==='acrylic-soak'||body.removal;Object.assign(body,{action:'reserve',time:chosenTime});
+  const body=Object.fromEntries(new FormData(form));['removal','shapeChange','acceptPolicies'].forEach(k=>body[k]=form.elements[k].checked);body.removal=body.service==='acrylic-soak'||body.removal;Object.assign(body,{action:'reserve',time:chosenTime});
   const result=await api('/api/booking',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});activeToken=result.token;history.replaceState(null,'',`/book#${activeToken}`);
   $('#payment-instructions').textContent=result.paymentInstructions;await loadReceipt();
  }catch(error){$('#form-error').textContent=error.message;}finally{button.disabled=false;button.textContent='Send appointment request';}
