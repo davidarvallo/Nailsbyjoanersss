@@ -32,3 +32,13 @@ Portfolio lightboxes link a selected look into the booking preview. The booking 
 The homepage fall promotion and its navigation links hide outside October 1–November 30, 2026 using the America/Los_Angeles calendar date. Booking's existing seasonal validation remains unchanged.
 
 A portrait of Joane and client testimonials are intentionally deferred until real, approved content is supplied. No fabricated portrait, testimonial, rating, or client quote is shown. Native browser rendering across desktop/tablet/iPhone has not been checked in this environment; DOM interaction, image, static path, and JavaScript checks are run before deployment.
+
+## Soft palette and full-archive hero
+
+The refinement now uses cream for the main page and nail-art section, lighter blush for the hero and final invitation, and wine for the header, footer, headings, and actions. The hero keeps a thinner leopard frame. The booking summary is blush rather than a large wine block. These changes only affect presentation; service content, prices, appointment rules, and booking behavior remain unchanged.
+
+`hero-carousel.js` cycles through all 22 unique archive photographs (20 nails, 2 pedicures); five exact duplicate ZIP entries are omitted. It uses the individually cropped 400/800px WebP versions and maintains two image layers for an 850ms crossfade, with a 6.5-second reading interval between transitions. Only the initial image has high fetch priority. The next image is prefetched after the first loads; all 22 photos are not eagerly requested. The photo frame reserves a square aspect ratio, and controls sit below the artwork.
+
+Controls include previous/next, pause/play, arrow keys, and touch swipe. Keyboard focus/manual navigation pause automatic cycling; autoplay also pauses while hovered, offscreen, or in a hidden tab. Reduced-motion visitors start paused with transitions disabled. Each photo links to its larger portfolio view. Failed subsequent loads keep the previous photo visible. Without JavaScript the initial photo and portfolio link remain usable, and slideshow controls stay hidden.
+
+Checks cover all 22 photos and loop boundaries, image prefetch behavior, controls, reduced motion, offscreen/background handling, focus pause, swipe, rapid clicks, and failed-image recovery. Primary new text/background pairs exceed 4.5:1 contrast. Native visual browser checks remain unavailable.

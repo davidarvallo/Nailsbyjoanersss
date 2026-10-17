@@ -17,3 +17,24 @@
 @media(max-width:760px){.review-theme .section{padding-top:50px;padding-bottom:50px}.review-theme .hero-copy{padding:38px 7% 28px}.review-theme .hero-image{min-height:0;height:auto;aspect-ratio:1;margin:0 7% 34px}.review-theme .hero h1{font-size:clamp(42px,10.8vw,60px)}.review-theme .hero-actions{gap:18px}.review-theme header .header-book{display:none}.review-theme header{min-height:88px}.review-theme header .brand{margin-inline:auto}.review-theme #menu{position:absolute;right:5%;top:50%;transform:translateY(-50%)}.review-theme .service-card h3{font-size:27px}.booking-facts{grid-template-columns:1fr;gap:14px;padding-top:20px}.booking-facts>div{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}.booking-facts span{margin:0}.review-theme:not(.booking-page){padding-bottom:calc(78px + env(safe-area-inset-bottom,0px))}.mobile-actions{position:fixed;bottom:0;left:0;right:0;z-index:8;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;padding:12px 6% calc(12px + env(safe-area-inset-bottom,0px));background:#fffaf4f5;border-top:1px solid #e5c7bf;box-shadow:0 -4px 20px #4823320a}.mobile-actions .button{min-height:48px;padding:12px 18px;font-size:13px}.mobile-text{font-size:13px;color:var(--wine);min-height:44px;display:flex;align-items:center;border-bottom:1px solid #b16d82}.review-theme:has(dialog[open]) .mobile-actions{display:none}.selected-inspiration{grid-template-columns:72px minmax(0,1fr);padding:12px;gap:12px}.selected-inspiration>img{width:72px;height:72px}.inspiration-upload{padding:16px}.inspiration-upload legend{font-size:22px}.inspiration-previews{gap:8px}.visit-reminders .visit-rules{gap:12px}}
 @media(prefers-reduced-motion:reduce){.review-theme{scroll-behavior:auto}}
 .review-theme [hidden]{display:none!important}
+
+/* Softer palette: cream leads, blush connects sections, wine adds contrast. */
+.review-theme{--cream:#fff8f0;--paper:#fffaf4;--pink:#f8e6e7;--line:#ead8d2;background:#fff8f0;color:#482332}
+.review-theme .hero{background:#f8e6e7}.review-theme .ribbon{background:#f5e9e2;color:#681e37;border-block:1px solid #ead8d2}.review-theme .ribbon span:nth-child(even){color:#a34061}
+.review-theme .light,.review-theme .booking{background:#fff8f0}.review-theme .service-card,.review-theme .service-card+.service-card{border-color:#ead8d2;background:#fffaf4}
+.review-theme .dark{background:#fffaf4;color:#681e37;border-block:1px solid #ead8d2}.review-theme .dark .eyebrow,.review-theme .dark h2 em,.review-theme .tier-label{color:#a34061}
+.review-theme .art-intro,.review-theme .art-intro .fine,.review-theme .tier>p:not(.price),.review-theme .tier .tier-short,.review-theme .tier-inclusions p,.review-theme .dark .service-work-copy p{color:#704b50}
+.review-theme .tier h3,.review-theme .tier .price,.review-theme .dark .service-work-copy{color:#681e37}
+.review-theme .tier-grid,.review-theme .tier+.tier,.review-theme .tier-inclusions,.review-theme .dark .service-work{border-color:#ead8d2}
+.review-theme .tier-inclusions>summary,.review-theme .tier-button{color:#792e4b}.review-theme .tier-button{border-color:#b77c8e}.review-theme .tier-button:hover{color:#a34061;border-color:#a34061}
+.review-theme .about{background:#faeeeb}.review-theme .about-mark{background-color:#fbefdf}.review-theme .about-mark:before{height:7px;opacity:.7}
+.review-theme .fall-menu{background:#fbf2e8;background-image:none}.review-theme .schedule,.review-theme .rule-card{background:#fffaf4;border-color:#e5c7bf}
+.review-theme .final-cta{background:#f6e4e7;color:#681e37;border-color:#ead8d2}.review-theme .final-cta .eyebrow,.review-theme .final-cta h2 em{color:#a34061}.review-theme .final-cta>p:not(.eyebrow),.review-theme .final-cta>span{color:#704b50}
+.review-theme .final-cta .gold{background:#681e37;color:#fff8f0}.review-theme .final-cta .gold:hover{background:#8b2e50}.review-theme .final-cta:before{opacity:.22;width:16%}.review-theme .final-cta:after{width:7px;opacity:.7}
+.review-theme footer{background:#681e37;color:#f0d4d9}.review-theme .footer-brand{color:#fff8f0}
+.review-theme.booking-page .booking-summary{background:#f9e9e8;color:#482332;border:1px solid #e5c7bf;border-top:3px solid #b16d82;border-image:none}
+.review-theme.booking-page .booking-summary .eyebrow,.review-theme.booking-page .booking-summary h2,.review-theme.booking-page .summary-deposit strong{color:#681e37}
+.review-theme.booking-page .booking-summary h2 em,.review-theme.booking-page .summary-footer a{color:#923953}
+.review-theme.booking-page .booking-summary dt,.review-theme.booking-page .booking-summary .helper,.review-theme.booking-page .summary-deposit p{color:#79515b}
+.review-theme.booking-page .booking-summary dd{color:#482332}.review-theme.booking-page .booking-summary dl>div,.review-theme.booking-page .summary-footer{border-color:#e5c7bf}
+.review-theme header{color:#fff8f0}
