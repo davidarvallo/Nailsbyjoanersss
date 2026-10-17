@@ -24,6 +24,7 @@
     large.alt = photo.alt;
     large.src = `${photo.base}-large.webp`;
     caption.textContent = photo.alt;
+    document.querySelector("#work-inspiration").href = `/book?inspiration=${encodeURIComponent(photo.id)}`;
     counter.textContent = `${activeIndex + 1} of ${viewing.length} · ${photo.category === 'nails' ? 'Nails' : 'Pedicures'}`;
   }
   function openPhoto(photo, button) {

@@ -22,3 +22,13 @@ node --check portfolio-data.js
 ```
 
 This static mockup has no configured lint, TypeScript, or application build command. Keep the existing Vercel project and preview branch deployment; do not create another project or promote over production without a request.
+
+## Refined review concept
+
+The `preview/joane-refinement` concept uses Joane's real floral set in the hero, clearer appointment and portfolio actions, a Services dropdown, compact menu cards with expandable inclusions, a deposit/payment/confirmation summary, and mobile booking/text shortcuts. Original prices and full menu descriptions remain available. Fill/removal reminders are expandable; the full policies stay visible in their original section.
+
+Portfolio lightboxes link a selected look into the booking preview. The booking form previews up to three JPG/PNG/WebP images (10 MB each), validates selection, and supports removing images. These image previews are browser-only: no image upload service or appointment submission is enabled. Existing booking logic and configuration remain unchanged.
+
+The homepage fall promotion and its navigation links hide outside October 1–November 30, 2026 using the America/Los_Angeles calendar date. Booking's existing seasonal validation remains unchanged.
+
+A portrait of Joane and client testimonials are intentionally deferred until real, approved content is supplied. No fabricated portrait, testimonial, rating, or client quote is shown. Native browser rendering across desktop/tablet/iPhone has not been checked in this environment; DOM interaction, image, static path, and JavaScript checks are run before deployment.
