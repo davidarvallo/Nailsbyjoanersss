@@ -1,0 +1,28 @@
+/* Portfolio styles are isolated from booking, service pricing, and payment UI. */
+.work-section,.portfolio-page{--work-wine:#681e3b;--work-pink:#c34279;--work-cream:#fff8f1;background:var(--work-cream);color:var(--work-wine)}
+.work-section{border-top:1px solid #e5c9d0}.work-section .eyebrow,.portfolio-page .eyebrow{color:var(--work-pink)}
+.work-section .section-top{align-items:center}.work-section .section-top>p{color:#75545e;max-width:340px}
+.work-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
+.work-card{display:block;min-width:0;padding:0;border:0;background:#f3e8df;text-align:left;color:inherit;overflow:hidden}
+.work-card img{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:cover}
+.work-card:focus-visible,.work-link:focus-visible,.work-filter:focus-visible{outline:3px solid var(--work-pink);outline-offset:5px}
+.work-card:hover img{opacity:.94}.work-link{display:inline-block;border-bottom:1px solid var(--work-pink);padding:12px 0 5px;font-size:14px;min-height:44px}
+.work-section .work-link{margin-top:26px}.work-note{font-size:13px;color:#75545e;margin:14px 0 0}
+.service-work{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:center;margin:40px 0 0;padding-top:30px;border-top:1px solid var(--line)}
+.service-work-copy{max-width:370px}.service-work-copy h3{margin-bottom:16px}.service-work-copy p{font-size:14px}
+.service-work-images{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:480px;justify-self:end;width:100%}
+.dark .service-work{border-color:#ffffff2d}.dark .service-work-copy{color:var(--cream)}.dark .service-work-copy p{color:#bebdb3}
+.portfolio-page{min-height:70vh;padding:65px 7% 80px}.portfolio-heading{max-width:680px}.portfolio-heading h1{font-size:clamp(44px,5.5vw,76px);margin:0 0 24px;letter-spacing:-2px}.portfolio-heading>p:last-child{color:#75545e;max-width:540px}
+.work-filters{display:flex;flex-wrap:wrap;gap:10px;margin:32px 0 12px}.work-filter{min-height:44px;padding:9px 20px;border:1px solid #be91a1;border-radius:24px;color:var(--work-wine);background:transparent;font-size:14px}.work-filter[aria-pressed=true]{color:#fff8f1;background:var(--work-wine);border-color:var(--work-wine)}
+.work-status{font-size:13px;color:#75545e;min-height:22px;margin-bottom:24px}.work-load{display:block;margin:32px auto 0;min-height:48px;padding:12px 28px;background:var(--work-wine);color:var(--work-cream)}.work-load[hidden]{display:none}
+.work-back{margin-bottom:30px;display:inline-block;font-size:14px;border-bottom:1px solid #be91a1;padding:6px 0}.portfolio-footer{margin-top:48px;border-top:1px solid #e5c9d0;padding-top:28px}.portfolio-footer p{color:#75545e}
+#work-lightbox{padding:16px;border:0;background:#24151d;color:#fff8f1;max-width:1060px;width:calc(100% - 24px);max-height:calc(100dvh - 24px);overflow:auto}
+#work-lightbox::backdrop{background:#120910e8;backdrop-filter:blur(4px)}
+.lightbox-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}.lightbox-toolbar p{margin:0;font-size:13px}.lightbox-control{display:inline-flex;justify-content:center;align-items:center;min-width:48px;min-height:48px;background:#fff8f118;color:#fff8f1;border:1px solid #fff8f140;font-size:22px;flex-shrink:0}
+.lightbox-control:focus-visible{outline:3px solid #ff9ac5;outline-offset:3px}.lightbox-stage{display:grid;grid-template-columns:48px minmax(0,1fr) 48px;gap:12px;align-items:center}.lightbox-stage figure{min-width:0;position:static}.lightbox-stage img{width:100%;height:min(65dvh,740px);object-fit:contain}.lightbox-caption{position:static;display:block;margin:14px 0 0;font-size:14px;letter-spacing:0;color:#fff8f1;text-align:center;max-width:100%}
+#work-lightbox .lightbox-help{font-size:12px;color:#d5bfc9;text-align:center;margin:12px 0 0}
+@media(max-width:1100px){.work-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.work-preview{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}}
+@media(max-width:760px){.work-grid,.work-preview{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.portfolio-page{padding:36px 7% 55px}.portfolio-heading h1{font-size:48px;letter-spacing:-1.5px}.service-work{grid-template-columns:1fr;gap:20px;margin-top:30px}.service-work-images{justify-self:start;max-width:520px}.work-filters{gap:8px}.work-filter{padding:9px 16px}.lightbox-stage{grid-template-columns:44px minmax(0,1fr) 44px;gap:4px}.lightbox-control{min-width:44px;min-height:44px}#work-lightbox{padding:12px}.lightbox-stage img{height:58dvh}.lightbox-caption{font-size:13px}.work-section .section-top>p{max-width:none}}
+@media(prefers-reduced-motion:reduce){.work-card img{transition:none}}
+/* The extra portfolio link uses the existing menu on tablets to avoid crowding. */
+@media(min-width:761px) and (max-width:1100px){header nav{display:none}#menu{display:block}.header-book{margin-left:auto}}
