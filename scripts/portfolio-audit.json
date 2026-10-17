@@ -1,0 +1,136 @@
+{
+  "archiveImages": 27,
+  "uniqueImages": 22,
+  "duplicates": [
+    {
+      "source": "6.jpg",
+      "sameAs": "13.jpg"
+    },
+    {
+      "source": "image7.jpg",
+      "sameAs": "13.jpg"
+    },
+    {
+      "source": "image8.jpg",
+      "sameAs": "14.jpg"
+    },
+    {
+      "source": "IMG_185.jpg",
+      "sameAs": "image0.jpg"
+    },
+    {
+      "source": "nailsbyjoanersss.jpg",
+      "sameAs": "FullSizeRendersss.jpg"
+    }
+  ],
+  "originals": [
+    {
+      "source": "12.jpg",
+      "sha256": "6c3299c2d52ce3ec48f3af2f67920d958218e51b2193d6036ab2a2dbcd34eeff"
+    },
+    {
+      "source": "13.jpg",
+      "sha256": "2dca2cc1b0600aa2731fb5a1a779ec9797afd3427f0bf1c118ea4afb1d9b7d2d"
+    },
+    {
+      "source": "14.jpg",
+      "sha256": "1ea2c298fa7be9afe2d6443e9396b9083266b160d0e6b95c132f44f34eb3652e"
+    },
+    {
+      "source": "15.jpg",
+      "sha256": "4b7858294b8359898ef806592bb8de46572fde70d1ab40655277b0e9a4e13b1a"
+    },
+    {
+      "source": "16.jpg",
+      "sha256": "f93887c82e6269a4a48d9729ad866b34a4d48cb99a7da6fe237c0cd323654ef7"
+    },
+    {
+      "source": "17.jpg",
+      "sha256": "fc345edf727653619fd55916cd565b07b03111750e284b06b26ec106b68dc331"
+    },
+    {
+      "source": "18.jpg",
+      "sha256": "0ecba0e558f5e74fc203e5dd55fe0e0c2b04eb3df7225f3a05075f2981e0f5ae"
+    },
+    {
+      "source": "19.jpg",
+      "sha256": "f382d71180e82829ae3e665420d3c218169ba170d8ec2fe7a8a28b130e416ffd"
+    },
+    {
+      "source": "20.jpg",
+      "sha256": "3f1e14439e8a48439a9944ad07b5f3f0cbb0203aa1e1175fd29f647a7008bc11"
+    },
+    {
+      "source": "21.jpg",
+      "sha256": "c085d1f6f22d318b0458a9cec2d572a917f2563a1eb2e3793dc546d4dbe915d4"
+    },
+    {
+      "source": "6.jpg",
+      "sha256": "2dca2cc1b0600aa2731fb5a1a779ec9797afd3427f0bf1c118ea4afb1d9b7d2d"
+    },
+    {
+      "source": "FullSizeRender.jpg",
+      "sha256": "905e9fc50bd4219581dd595c153ef7ce833fdcada3ad6264b0775a6cf638cd77"
+    },
+    {
+      "source": "FullSizeRenders.jpg",
+      "sha256": "19959084e124239bb39752ea6a28f87202ae476b9b429542916456dd37d8d365"
+    },
+    {
+      "source": "FullSizeRendersss.jpg",
+      "sha256": "f6063c8583d7ff26f5de60bdfefcb21f2b58cbb8902b8b237e2b2af9f5f44fc6"
+    },
+    {
+      "source": "image.jpg",
+      "sha256": "00193ace04d45f3afa5801c0bc67914fe859a1feef1c02a05227806d769a6039"
+    },
+    {
+      "source": "image0.jpg",
+      "sha256": "652c43b3330a212820c3451f54197657880bde74a3265d8c31448ecba6a96175"
+    },
+    {
+      "source": "image1.jpg",
+      "sha256": "5efd3b6cf86e9a1b86c676c7e655cc96664291cfbcb64aee71f7efecce5d6351"
+    },
+    {
+      "source": "image2.jpg",
+      "sha256": "660937a2c875dd9dce91396bbc6a74bcc41ea5465952dfdb4a0b42f304ba42bc"
+    },
+    {
+      "source": "image3.jpg",
+      "sha256": "4e1a9c9d27f7ba09809dcd655a85ba73d30f6b379c108d5abfbf9e23741a29eb"
+    },
+    {
+      "source": "image4.jpg",
+      "sha256": "55701624aa8bf90dfa05c2a9d83f9605438fcdce42a779183fcf9788a38eec54"
+    },
+    {
+      "source": "image5.jpg",
+      "sha256": "a2370d2c8bdeb3f066510d325a25345a1ce89c6bbf6b21ec4ac96b59ae1beda6"
+    },
+    {
+      "source": "image7.jpg",
+      "sha256": "2dca2cc1b0600aa2731fb5a1a779ec9797afd3427f0bf1c118ea4afb1d9b7d2d"
+    },
+    {
+      "source": "image8.jpg",
+      "sha256": "1ea2c298fa7be9afe2d6443e9396b9083266b160d0e6b95c132f44f34eb3652e"
+    },
+    {
+      "source": "image99.jpg",
+      "sha256": "666ee74abfaba946341932638e5ed2f9550cb241504ff7e4c3d716e17dcc36bb"
+    },
+    {
+      "source": "IMG_185.jpg",
+      "sha256": "652c43b3330a212820c3451f54197657880bde74a3265d8c31448ecba6a96175"
+    },
+    {
+      "source": "IMG_1859.jpg",
+      "sha256": "ff95d68050a4279ec6c92f7b5b778e7bdbf373ac8d813d972235c1ce0bed8048"
+    },
+    {
+      "source": "nailsbyjoanersss.jpg",
+      "sha256": "f6063c8583d7ff26f5de60bdfefcb21f2b58cbb8902b8b237e2b2af9f5f44fc6"
+    }
+  ]
+}
