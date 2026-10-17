@@ -4,15 +4,12 @@
   const photos = window.PORTFOLIO_PHOTOS || [];
   if (!root || photos.length < 2) return;
   const stage = root.querySelector('.hero-carousel-stage');
-  root.querySelector('.hero-carousel-controls').hidden = false;
   let active = root.querySelector('.hero-carousel-photo');
   let buffer = document.createElement('img');
   buffer.className = 'hero-carousel-photo';
   buffer.width = 800; buffer.height = 800; buffer.alt = '';
   buffer.setAttribute('aria-hidden', 'true');
   stage.append(buffer);
-  const counter = document.querySelector('#hero-carousel-count');
-  const link = document.querySelector('#hero-carousel-link');
   const status = document.querySelector('#hero-carousel-status');
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const interval = 6500;
@@ -78,17 +75,12 @@
       buffer.classList.add('is-visible'); active.classList.remove('is-visible');
       const previous = active; active = buffer; buffer = previous;
       index = target;
-      const category = photo.category === 'pedicures' ? 'Pedicures' : 'Nails';
-      counter.textContent = `${String(index + 1).padStart(2, '0')} / ${photos.length} · ${category}`;
-      link.href = `/portfolio#${photo.id}`;
       if (manual) status.textContent = `Photo ${index + 1} of ${photos.length}: ${photo.alt}`;
       await new Promise(resolve => setTimeout(resolve, motion.matches ? 0 : 900));
     }
     busy = false; schedule();
   }
   function move(direction) { desired = wrap(desired + direction); show(true); }
-  document.querySelector('#hero-carousel-prev').addEventListener('click', () => move(-1));
-  document.querySelector('#hero-carousel-next').addEventListener('click', () => move(1));
   root.addEventListener('keydown', event => {
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
       event.preventDefault(); move(event.key === 'ArrowLeft' ? -1 : 1);
@@ -96,6 +88,7 @@
   });
   let touch;
   stage.addEventListener('touchstart', event => {
+    if (event.touches.length !== 1) { touch = undefined; return; }
     const first = event.touches[0]; touch = {x:first.clientX, y:first.clientY};
   }, {passive:true});
   stage.addEventListener('touchend', event => {
@@ -104,6 +97,7 @@
     const dx = last.clientX - touch.x, dy = last.clientY - touch.y; touch = undefined;
     if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) move(dx < 0 ? 1 : -1);
   }, {passive:true});
+  stage.addEventListener('touchcancel', () => { touch = undefined; }, {passive:true});
   document.addEventListener('visibilitychange', schedule);
   if (window.IntersectionObserver) {
     const observer = new IntersectionObserver(entries => { inView = entries[0].isIntersecting; schedule(); }, {threshold:0.1});
