@@ -38,3 +38,13 @@
 .review-theme.booking-page .booking-summary dt,.review-theme.booking-page .booking-summary .helper,.review-theme.booking-page .summary-deposit p{color:#79515b}
 .review-theme.booking-page .booking-summary dd{color:#482332}.review-theme.booking-page .booking-summary dl>div,.review-theme.booking-page .summary-footer{border-color:#e5c7bf}
 .review-theme header{color:#fff8f0}
+
+/* Pink cheetah accents: wide enough to show whole, irregular spots. */
+.review-theme{--cheetah-print:url('/assets/leopard.svg')}
+.review-theme .about-mark:before{height:32px;opacity:1;background:var(--cheetah-print) center/180px 135px repeat}
+.review-theme .final-cta{padding-inline:max(7%,44px)}
+.review-theme .final-cta:after{width:36px;opacity:1;background:var(--cheetah-print) center/180px 135px repeat}
+@media(max-width:760px){
+ .review-theme .about-mark:before{height:28px}
+ .review-theme .final-cta:after{width:28px}
+}
