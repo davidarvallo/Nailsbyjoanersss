@@ -64,3 +64,13 @@ body.studio-home{max-width:none;margin-inline:0}
  .review-theme .about-mark{background-size:min(80%,300px) auto}
  .review-theme .final-cta{--accent-band:32px;padding:42px 20px 48px}
 }
+
+/* Frame both Meet Joane panels together with one continuous, even print band. */
+.review-theme .about{
+ --accent-band:40px;
+ border:var(--accent-band) solid transparent;
+ background:var(--cheetah-print) left top/360px auto repeat border-box;
+}
+.review-theme .about-copy{background:#faeeeb}
+.review-theme .about-mark:before{content:none}
+@media(max-width:760px){.review-theme .about{--accent-band:32px}}
