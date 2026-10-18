@@ -48,3 +48,19 @@
  .review-theme .about-mark:before{height:28px}
  .review-theme .final-cta:after{width:28px}
 }
+
+/* Let homepage section backgrounds reach the page edges on large screens. */
+body.studio-home{max-width:none;margin-inline:0}
+.review-theme .about-mark{background-position:center center;background-size:min(76%,430px) auto}
+/* One shared border width keeps the closing frame equal at the top and sides. */
+.review-theme .final-cta{
+ --accent-band:40px;
+ border:0;border-top:var(--accent-band) solid transparent;border-inline:var(--accent-band) solid transparent;border-image:none;
+ background:linear-gradient(#f6e4e7,#f6e4e7) padding-box,var(--cheetah-print) left top/180px 144px repeat border-box;
+ padding:64px max(6%,24px) 68px;
+}
+.review-theme .final-cta:after{content:none}
+@media(max-width:760px){
+ .review-theme .about-mark{background-size:min(80%,300px) auto}
+ .review-theme .final-cta{--accent-band:32px;padding:42px 20px 48px}
+}
