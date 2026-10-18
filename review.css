@@ -40,10 +40,10 @@
 .review-theme header{color:#fff8f0}
 
 /* Pink cheetah accents: wide enough to show whole, irregular spots. */
-.review-theme{--cheetah-print:url('/assets/leopard.svg')}
-.review-theme .about-mark:before{height:32px;opacity:1;background:var(--cheetah-print) center/180px 135px repeat}
+.review-theme{--cheetah-print:url('/IMG_9426.jpeg')}
+.review-theme .about-mark:before{height:32px;opacity:1;background:var(--cheetah-print) center/360px auto repeat}
 .review-theme .final-cta{padding-inline:max(7%,44px)}
-.review-theme .final-cta:after{width:36px;opacity:1;background:var(--cheetah-print) center/180px 135px repeat}
+.review-theme .final-cta:after{width:36px;opacity:1;background:var(--cheetah-print) center/360px auto repeat}
 @media(max-width:760px){
  .review-theme .about-mark:before{height:28px}
  .review-theme .final-cta:after{width:28px}
@@ -56,7 +56,7 @@ body.studio-home{max-width:none;margin-inline:0}
 .review-theme .final-cta{
  --accent-band:40px;
  border:0;border-top:var(--accent-band) solid transparent;border-inline:var(--accent-band) solid transparent;border-image:none;
- background:linear-gradient(#f6e4e7,#f6e4e7) padding-box,var(--cheetah-print) left top/180px 144px repeat border-box;
+ background:linear-gradient(#f6e4e7,#f6e4e7) padding-box,var(--cheetah-print) left top/360px auto repeat border-box;
  padding:64px max(6%,24px) 68px;
 }
 .review-theme .final-cta:after{content:none}

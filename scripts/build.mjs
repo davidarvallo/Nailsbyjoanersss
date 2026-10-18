@@ -4,6 +4,7 @@ for(const dir of ['.','api','lib','scripts'])for(const f of readdirSync(dir))if(
 rmSync('dist',{recursive:true,force:true});mkdirSync('dist');
 for(const f of readdirSync('.'))if(/\.(html|css|js)$/.test(f))cpSync(f,`dist/${f}`);
 cpSync('White_NAILS_By_Joanersss_logo.png','dist/White_NAILS_By_Joanersss_logo.png');
+cpSync('IMG_9426.jpeg','dist/IMG_9426.jpeg');
 for(const dir of ['assets','public'])cpSync(dir,`dist/${dir}`,{recursive:true});
 for(const file of readdirSync('dist').filter(f=>f.endsWith('.html'))){
  const html=readFileSync(`dist/${file}`,'utf8');
