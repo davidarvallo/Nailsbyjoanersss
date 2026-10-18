@@ -42,7 +42,7 @@
         resolve(image);
       };
       image.onerror = () => { cache.delete(target); reject(new Error('Photo could not be loaded.')); };
-      image.sizes = '(max-width: 389px) 72vw, (max-width: 760px) 280px, 420px';
+      image.sizes = '(max-width: 392px) 84vw, (max-width: 760px) 330px, 500px';
       image.srcset = `${photo.base}-400.webp 400w, ${photo.base}-800.webp 800w`;
       image.src = `${photo.base}-800.webp`;
     });

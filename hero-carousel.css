@@ -1,14 +1,14 @@
 /* Compact photo frame with a slow zoom-out and crossfade. */
-.review-theme .hero-carousel.hero-image{display:block;align-self:center;justify-self:center;width:calc(100% - 60px);max-width:420px;margin:30px auto;min-width:0;min-height:0;max-height:none;height:auto;aspect-ratio:auto;background:var(--paper);border:6px solid #fff7ec;box-shadow:4px 5px 0 #c58a7940}
-.review-theme .hero-carousel:before{border-width:3px;z-index:1}.review-theme .hero-carousel:after{display:none}
-.hero-carousel-stage{touch-action:pan-y pinch-zoom;position:relative;width:100%;aspect-ratio:1;overflow:hidden;background:#f3e8df}
+.review-theme .hero-carousel.hero-image{display:block;align-self:center;justify-self:center;width:calc(100% - 60px);max-width:500px;margin:30px auto;min-width:0;min-height:0;max-height:none;height:auto;aspect-ratio:auto;padding:12px;background:var(--season-pattern) center/112px 84px repeat;border:4px solid #fff7ec;box-shadow:4px 5px 0 #c58a7940}
+.review-theme .hero-carousel:before{content:none}.review-theme .hero-carousel:after{display:none}
+.hero-carousel-stage{touch-action:pan-y pinch-zoom;position:relative;width:100%;aspect-ratio:1;overflow:hidden;background:#f3e8df;outline:2px solid #fff7ec}
 .hero-carousel-stage>.hero-carousel-photo{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;transition:opacity 850ms ease;will-change:opacity}
 .hero-carousel-stage>.hero-carousel-photo.is-visible{opacity:1}
 
 
 
 .visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
-@media(max-width:760px){.review-theme .hero-carousel.hero-image{width:min(72vw,280px);margin:0 auto 30px}}
+@media(max-width:760px){.review-theme .hero-carousel.hero-image{width:min(84vw,330px);padding:10px;margin:0 auto 30px}}
 @media(prefers-reduced-motion:reduce){.hero-carousel-stage>.hero-carousel-photo{transition:none;will-change:auto}}
 
 .hero-carousel-stage:focus-visible{outline:3px solid #a34061;outline-offset:4px}
