@@ -14,7 +14,8 @@ class Assets(HTMLParser):
                 assert (ROOT/src.lstrip('/')).is_file(), f'Missing asset: {src}'
         if tag=='img' and 'public/images/' in attrs.get('src',''):
             assert attrs.get('width') and attrs.get('height') and attrs.get('alt')
-            assert attrs.get('loading')=='lazy'
+            if attrs.get('fetchpriority')=='high': assert attrs.get('loading')!='lazy'
+            else: assert attrs.get('loading')=='lazy'
 
 for page in ('index.html','portfolio.html'):
     Assets().feed((ROOT/page).read_text())

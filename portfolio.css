@@ -1,5 +1,6 @@
 /* Portfolio styles are isolated from booking, service pricing, and payment UI. */
-.work-section,.portfolio-page{--work-wine:#681e3b;--work-pink:#c34279;--work-cream:#fff8f1;background:var(--work-cream);color:var(--work-wine)}
+:root{--work-wine:var(--wine);--work-pink:#a34061;--work-cream:var(--paper)}
+.work-section,.portfolio-page{--work-wine:var(--wine);--work-pink:#a34061;--work-cream:var(--paper);background:var(--work-cream);color:var(--work-wine)}
 .work-section{border-top:1px solid #e5c9d0}.work-section .eyebrow,.portfolio-page .eyebrow{color:var(--work-pink)}
 .work-section .section-top{align-items:center}.work-section .section-top>p{color:#75545e;max-width:340px}
 .work-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
@@ -11,7 +12,7 @@
 .service-work{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:center;margin:40px 0 0;padding-top:30px;border-top:1px solid var(--line)}
 .service-work-copy{max-width:370px}.service-work-copy h3{margin-bottom:16px}.service-work-copy p{font-size:14px}
 .service-work-images{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:480px;justify-self:end;width:100%}
-.dark .service-work{border-color:#ffffff2d}.dark .service-work-copy{color:var(--cream)}.dark .service-work-copy p{color:#bebdb3}
+.dark .service-work{border-color:#ffffff2d}.dark .service-work-copy{color:var(--cream)}.dark .service-work-copy p{color:#f0d9da}
 .portfolio-page{min-height:70vh;padding:65px 7% 80px}.portfolio-heading{max-width:680px}.portfolio-heading h1{font-size:clamp(44px,5.5vw,76px);margin:0 0 24px;letter-spacing:-2px}.portfolio-heading>p:last-child{color:#75545e;max-width:540px}
 .work-filters{display:flex;flex-wrap:wrap;gap:10px;margin:32px 0 12px}.work-filter{min-height:44px;padding:9px 20px;border:1px solid #be91a1;border-radius:24px;color:var(--work-wine);background:transparent;font-size:14px}.work-filter[aria-pressed=true]{color:#fff8f1;background:var(--work-wine);border-color:var(--work-wine)}
 .work-status{font-size:13px;color:#75545e;min-height:22px;margin-bottom:24px}.work-load{display:block;margin:32px auto 0;min-height:48px;padding:12px 28px;background:var(--work-wine);color:var(--work-cream)}.work-load[hidden]{display:none}

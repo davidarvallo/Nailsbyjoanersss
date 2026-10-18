@@ -1,30 +1,36 @@
-# Nailsbyjoanerss
+# Nailsbyjoanersss
 
-Static luxury nail studio landing-page mockup. Deploy repository root using Vercel Other preset; no build command required. Online booking and payment links are not connected.
+The production site lives on `main`. It uses Joane’s refined cream, blush, and wine design, the real-photo hero carousel, portfolio, custom booking page, and private studio dashboard. Vercel installs the locked dependencies, runs `npm run build`, and serves `dist`; `/api/booking` is a server function.
 
-## Portfolio photography
-
-`portfolio.html` adds `/portfolio` using the existing Vercel clean URLs. The homepage shows four portfolio favorites, two nail examples, and two pedicure examples. Service prices and booking behavior are unchanged. Production currently uses `main`; separate booking/design branches are not merged by this change.
-
-The ZIP contains 27 JPEG entries: 23 nails and 4 pedicures, including five exact duplicates. The portfolio contains 20 unique nail photos and 2 unique pedicure photos. Source names and duplicate hashes are recorded in `scripts/portfolio-audit.json`; individual crops and display dimensions are in `portfolio-data.js`. All 22 unique images are retained; some originals are dark but the artwork remains visible. No photo is labeled as a pricing tier.
-
-Each photo has 400px and 800px square thumbnails, plus a larger view capped at 1400×1800. Gallery thumbnails use responsive `srcset`, reserved dimensions, and lazy loading. Larger images load only when the native dialog opens. The 12-photo initial gallery supports category filters and Load More. Native dialog supplies Escape dismissal and focus containment; arrow keys and buttons navigate, with focus restored on close. The homepage links directly to the relevant photo.
-
-Rebuild images with Python and Pillow:
+## Develop and verify
 
 ```sh
-python scripts/optimize-portfolio.py
+npm ci
+npm test
+npm run build
 python scripts/check-portfolio.py
-node --check portfolio.js
-node --check portfolio-data.js
 ```
 
-The source archive remains intact. Extraction happens in memory; no temporary source photos are tracked. Image processing corrects EXIF orientation, applies reviewed crops, resizes without stretching, and encodes metadata-free WebP. Screenshot borders and controls are removed from larger display copies where present. This is a static site with no configured lint, TypeScript, or application build command. Vercel serves the repository root, so asset URLs intentionally include `/public/images/`.
+Node 22 or newer is required. The build checks JavaScript syntax and static asset paths, and keeps server/database/auth source outside `dist`. Do not serve the repository root as production static content.
 
-## Studio opening signature
+## Booking status
 
-The homepage uses `intro.css`, `intro.js`, and a small fail-open bootstrap in `index.html`. The original transparent `White_NAILS_By_Joanersss_logo.png` (1524×1032) is displayed unchanged over the existing charcoal and muted-gold palette. Its reveal, masked gloss, fine highlight, and homepage fade take 3.2 seconds. There are no new runtime dependencies or build steps.
+Booking is connected but remains gated by server configuration and Joane’s dashboard setting. See [BOOKING-SETUP.md](BOOKING-SETUP.md) for the required database, admin, and activation steps. Deploying the design does not enable booking or migrate the database. The form reports setup status instead of inventing availability. Inspiration uploads are browser-only previews; persistent private image uploads and Square payment processing are not implemented.
 
-The signature plays once per tab session, using `sessionStorage` and an appended, namespaced `window.name` marker only when storage writes fail. Reduced motion skips it. Tab or Escape dismisses it immediately. Page exit clears it before browser back/forward restoration. A 3.7-second independent watchdog clears the overlay if its controller fails; failed or late logo loads dismiss it sooner. The overlay is hidden by default, so disabled JavaScript or failed styles leave the homepage usable. The booking script does not control the intro timeline. Slow connections may skip the reveal rather than delay access to the site.
+## Opening signature
 
-QA: desktop Chromium (1440×1000) and mobile Chromium emulation (390×844), first visit/reload, portfolio filters/lightbox/return, mobile menu, service dialog, reduced motion, unavailable storage, missing logo/controller, disabled JavaScript, keyboard dismissal, and slow booking script. Physical iOS Safari and WebKit have not been tested.
+`index.html`, `intro.css`, and `intro.js` provide a 3.2-second wine and blush introduction using the unchanged transparent `White_NAILS_By_Joanersss_logo.png` (1524×1032). The logo fades and gently settles into place, followed by a masked gloss sweep, fine highlight, and fade into the pink homepage. The build explicitly includes the original PNG.
+
+The signature plays once per tab session using `sessionStorage`, with a namespaced `window.name` marker when storage writes fail. Its pink-specific key lets visitors see the new signature once after the previous charcoal version. Reduced motion skips the intro; Tab or Escape dismisses it. Page exit clears the overlay before browser back/forward restoration. Failed/late logo loading exits early, and an independent 3.7-second watchdog restores the page if the controller fails. The overlay is hidden by default and independent of booking/API requests. Only transform and opacity animate; no animation libraries are added.
+
+## Portfolio and carousel
+
+All 22 unique archive photos (20 nails and 2 pedicures) remain available. Five exact duplicates from the ZIP are omitted. Each photo has 400px and 800px square thumbnails plus a larger display version capped at 1400×1800, with reviewed crops, responsive source sizes, alt text, and reserved dimensions. Rebuild using `python scripts/optimize-portfolio.py`; image audit details are in `scripts/portfolio-audit.json` and crop data in `portfolio-data.js`.
+
+The hero crossfades automatically with a 6.5-second interval and supports swipe and arrow keys. It pauses offscreen, in hidden tabs, and with reduced motion. `/portfolio` offers category filters, Load More, and a native dialog lightbox. Selecting a look passes the inspiration to `/book`. The fall promotion follows the America/Los_Angeles calendar and hides outside October 1–November 30, 2026.
+
+## Branch consolidation
+
+The production consolidation uses `preview/joane-refinement` at `c24adbe2b06bf7bb5baca55891c2a38bf39b77e6` as its site foundation, with the uploaded logo and restyled opening animation carried forward from `main` at `464ea4ab397d1975593a5dfda6c2721e66e27127`.
+
+The consolidation commit retains both histories and `feature/custom-booking` at `950c46403867858d0d9ae99f53b637004c7da765` as parents. `preview/joane-mockup` at `654f1d07e51dad90b5659c8f1920308b8dd499b9` is already an ancestor of refinement. This preserves every branch’s commits after removing the extra branch references. The older booking branch’s separate file layout is historical; the refinement implementation is the active one.

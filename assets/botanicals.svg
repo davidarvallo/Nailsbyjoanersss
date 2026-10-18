@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" fill="none">
+<g stroke="#8b3a51" stroke-width="1.4" opacity=".85">
+<path fill="#68764b" d="M264 480Q209 370 269 224Q330 367 264 480Z"/><path fill="#87905c" d="M256 392Q142 398 97 308Q211 296 256 392Z"/><path fill="#87905c" d="M278 367Q371 258 442 294Q409 387 278 367Z"/>
+<path d="M258 470Q276 351 281 243M261 397 112 319M272 379 427 305"/>
+</g>
+<g transform="translate(255 213)" stroke="#8d2749" stroke-width="1.5">
+<path fill="#ee9eaa" d="M0 0C-32-40-68-42-84-92C-105-154-34-170-9-123C12-173 79-144 63-96C50-49 13-38 0 0Z"/>
+<path fill="#e68d9e" d="M0 0C-28-24-85 6-131-22C-190-57-158-121-112-99C-123-152-61-171-38-126C-15-80-25-39 0 0Z" transform="rotate(-60)"/>
+<path fill="#f2b0b5" d="M0 0C-28-24-85 6-131-22C-190-57-158-121-112-99C-123-152-61-171-38-126C-15-80-25-39 0 0Z" transform="rotate(15)"/>
+<path fill="#df7893" d="M0 0C-28-24-85 6-131-22C-190-57-158-121-112-99C-123-152-61-171-38-126C-15-80-25-39 0 0Z" transform="rotate(90)"/>
+<path fill="#f7bbc2" d="M0 0C-28-24-85 6-131-22C-190-57-158-121-112-99C-123-152-61-171-38-126C-15-80-25-39 0 0Z" transform="rotate(162)"/>
+<g stroke="#aa3f63" opacity=".7"><path d="M0 0Q-20-54-9-119M0 0Q-67-43-108-85M0 0Q-73 12-109 42M0 0Q-23 76-10 114M0 0Q61 54 105 47"/></g>
+<path d="M0 0Q18-26 66-47" stroke="#6b203a" stroke-width="7"/><path d="M12-9 76-56" stroke="#f3c174" stroke-width="3"/>
+<g fill="#e7b76c" stroke="none"><circle cx="76" cy="-56" r="6"/><circle cx="83" cy="-48" r="5"/><circle cx="69" cy="-64" r="5"/></g></g>
+<g transform="translate(104 353) rotate(-24)" stroke="#963956" stroke-width="1.3" fill="#fff0d9">
+<path d="M0 0Q-76-24-70-89Q-20-83 0 0Z"/><path d="M0 0Q-37-68 1-111Q41-61 0 0Z"/><path d="M0 0Q34-92 85-87Q79-29 0 0Z"/><path d="M0 0Q-101 19-93 56Q-37 63 0 0Z"/><path d="M0 0Q-23 84 19 100Q48 57 0 0Z"/><path d="M0 0Q97-3 100 41Q45 58 0 0Z"/>
+<g stroke="#c38143" stroke-width="2"><path d="M0 0-26-34M0 0 0-39M0 0 27-28"/></g><g fill="#ad5e48"><ellipse cx="-26" cy="-34" rx="4" ry="7"/><ellipse cy="-39" rx="4" ry="7"/><ellipse cx="27" cy="-28" rx="4" ry="7"/></g></g>
+</svg>
