@@ -1,0 +1,88 @@
+/* Portfolio-only lookbook; shared homepage cards retain their existing styling. */
+body.portfolio-lookbook{max-width:none;margin:0;background:#fffaf4}
+.portfolio-lookbook .portfolio-page{padding:0;background:#fffaf4}
+.lookbook-intro{background:#f8e6e7;border-bottom:1px solid #e5c7bf;overflow:hidden}
+.lookbook-intro-inner{max-width:1380px;margin:auto;padding:36px 6% 48px;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:30px}
+.portfolio-lookbook .portfolio-heading{max-width:600px}
+.portfolio-lookbook .work-back{font-size:12px;margin-bottom:25px;border:0;color:#79515b;padding:0}
+.portfolio-lookbook .portfolio-heading .eyebrow{font-size:10px;letter-spacing:2.3px;margin-bottom:18px}
+.portfolio-lookbook .portfolio-heading h1{font-size:clamp(46px,5vw,72px);line-height:1.05;margin-bottom:20px}
+.portfolio-lookbook .portfolio-heading h1 em{color:#a34061}
+.portfolio-lookbook .portfolio-heading>p:last-of-type{font-size:15px;line-height:1.8;margin-bottom:22px}
+.lookbook-browse{display:inline-flex;align-items:center;gap:22px;font-size:13px;border-bottom:1px solid #b77c8e;padding:7px 0}
+.lookbook-browse span{font-size:21px}
+.lookbook-collage{position:relative;height:360px;width:100%;max-width:540px;justify-self:center}
+.lookbook-collage:before{content:'';position:absolute;width:65%;height:64%;top:15%;left:19%;background:url('/IMG_9426.jpeg') center/360px auto;transform:rotate(-5deg);border-radius:3px;opacity:.8}
+.lookbook-snapshot{position:absolute;background:#fffaf4;padding:8px 8px 0;border:1px solid #ead8d2;box-shadow:0 14px 30px #681e3720;width:41%;border-radius:5px;transition:transform .25s,box-shadow .25s;color:#681e37;text-align:left}
+.lookbook-snapshot img{width:100%;height:auto;aspect-ratio:1;object-fit:cover;border-radius:2px}
+.lookbook-snapshot>span{display:flex;justify-content:space-between;align-items:center;padding:11px 3px;font:italic 16px/1.2 Georgia,serif}
+.lookbook-snapshot>span>span{font:18px Arial,sans-serif}
+.snapshot-1{left:0;top:54px;transform:rotate(-10deg);z-index:1}
+.snapshot-2{left:29%;top:10px;transform:rotate(5deg);z-index:3;width:45%}
+.snapshot-3{right:0;top:98px;transform:rotate(12deg);z-index:2}
+.lookbook-snapshot:hover{transform:rotate(0) translateY(-5px);z-index:4;box-shadow:0 18px 35px #681e3733}
+.lookbook-snapshot:focus-visible{outline:3px solid #a34061;outline-offset:5px;z-index:5}
+
+.lookbook-gallery{max-width:1380px;margin:auto;padding:52px 6% 60px;scroll-margin-top:20px}
+.gallery-heading{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:27px}
+.gallery-heading .eyebrow{font-size:10px;letter-spacing:2px;margin-bottom:12px}
+.gallery-heading h2{font-size:clamp(32px,3.3vw,46px);letter-spacing:-1.2px}.gallery-heading h2 em{color:#a34061}
+.gallery-heading>p{font-size:13px;color:#79515b;margin:0;line-height:1.8}
+.lookbook-filterbar{position:sticky;top:0;z-index:6;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 0;background:#fffaf4f5;backdrop-filter:blur(12px);border-bottom:1px solid #ead8d2}
+.portfolio-lookbook .work-filters{margin:0;gap:5px;padding:4px;background:#f7e6e9;border:1px solid #e9cbd3;border-radius:30px;flex-wrap:nowrap;max-width:100%}
+.portfolio-lookbook .work-filter{border:0;background:transparent;border-radius:24px;padding:9px 16px;display:flex;align-items:center;gap:10px;font-size:13px;white-space:nowrap}
+.portfolio-lookbook .work-filter[aria-pressed=true]{background:#681e37;color:#fff8f0;box-shadow:0 3px 10px #681e3720}
+.work-filter [data-filter-count]{font-size:10px;opacity:.7;min-width:13px}
+.gallery-hint{font-size:11px;color:#956675;letter-spacing:.2px}
+.portfolio-lookbook .work-status{font-size:11px;margin:14px 0 22px;color:#85616d}
+.portfolio-lookbook .work-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.portfolio-lookbook .work-card{position:relative;display:flex;flex-direction:column;padding:9px;background:#fffaf4;border:1px solid #ead8d2;border-radius:8px;box-shadow:0 5px 16px #681e3708;overflow:visible;transition:transform .25s,box-shadow .25s;animation:lookbook-arrive .35s ease-out both}
+.portfolio-lookbook .work-card:hover{transform:translateY(-4px);box-shadow:0 12px 24px #681e3717}
+.lookbook-card-image{display:block;overflow:hidden;border-radius:4px;width:100%;min-width:0}
+.portfolio-lookbook .work-card img{opacity:1;aspect-ratio:1;transition:transform .5s;object-fit:cover}
+.portfolio-lookbook .work-card:hover img{transform:scale(1.025);opacity:1}
+.lookbook-card-caption{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:15px 6px 7px;flex:1;min-width:0}
+.lookbook-card-caption>span:first-child{min-width:0}.lookbook-card-caption small{display:block;font-size:9px;letter-spacing:1.5px;color:#a34061;margin-bottom:5px}
+.lookbook-card-caption strong{display:block;font:400 19px/1.25 Georgia,serif;color:#681e37}
+.lookbook-card-arrow{width:30px;height:30px;border:1px solid #e5c7bf;border-radius:50%;display:grid;place-items:center;flex-shrink:0;color:#a34061;font-size:16px}
+.lookbook-feature-copy{display:none}
+.portfolio-lookbook .work-card.is-featured{grid-column:span 2;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;background:#f8e6e7;padding:10px}
+.portfolio-lookbook .is-featured .lookbook-card-image{align-self:center}
+.portfolio-lookbook .is-featured .lookbook-card-caption{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:24px;position:relative}
+.portfolio-lookbook .is-featured .lookbook-card-caption:before{content:'';position:absolute;top:0;right:12px;width:48px;height:12px;background:url('/IMG_9426.jpeg') center/240px auto;transform:rotate(7deg);opacity:.7}
+.portfolio-lookbook .is-featured .lookbook-card-caption strong{font:italic 30px/1.15 Georgia,serif;letter-spacing:-.5px}
+.portfolio-lookbook .is-featured .lookbook-feature-copy{display:block;font-size:12px;line-height:1.8;color:#79515b;margin-top:14px}
+.portfolio-lookbook .is-featured .lookbook-card-arrow{margin-top:20px}
+.portfolio-lookbook .work-load{border-radius:28px;padding:14px 28px;font-size:13px;display:flex;gap:24px;align-items:center}.portfolio-lookbook .work-load[hidden]{display:none}
+.lookbook-cta{padding:24px 24px 0;background:url('/IMG_9426.jpeg') center/360px auto}
+.lookbook-cta-inner{position:relative;text-align:center;background:#f8e6e7;padding:48px 24px 44px;color:#681e37}
+.lookbook-cta .eyebrow{font-size:10px;letter-spacing:2px;color:#a34061;margin-bottom:16px}
+.lookbook-cta h2{font-size:clamp(35px,4vw,54px);letter-spacing:-1.5px;margin-bottom:18px}.lookbook-cta h2 em{color:#a34061}
+.lookbook-cta p{font-size:14px;color:#79515b}.lookbook-cta .button{gap:25px;border-radius:3px;margin:5px 0 15px}
+.lookbook-cta .lookbook-fine{font-size:11px;margin:0;color:#85616d}
+.portfolio-lookbook #work-lightbox{background:#fffaf4;color:#681e37;border:7px solid #f3d9df;border-radius:12px;box-shadow:0 20px 80px #21061180;padding:18px;max-width:1000px}
+.portfolio-lookbook #work-lightbox::backdrop{background:#361322df;backdrop-filter:blur(7px)}
+.portfolio-lookbook .lightbox-toolbar .eyebrow{font-size:9px;letter-spacing:1.7px;color:#a34061;margin:0 0 5px}
+.portfolio-lookbook .lightbox-toolbar p{font-size:12px}
+.portfolio-lookbook .lightbox-control{background:#f8e6e7;border:1px solid #e5c7bf;color:#681e37;border-radius:50%}
+.portfolio-lookbook .lightbox-stage{gap:12px}.portfolio-lookbook .lightbox-stage img{height:min(56dvh,620px);border-radius:5px;background:#efe2df}
+.portfolio-lookbook .lightbox-caption{color:#79515b;font-size:13px;margin:14px 0 0;line-height:1.6}
+.portfolio-lookbook .inspiration-action{border-radius:4px;background:#681e37;color:#fff8f0;padding:13px 24px;font-size:13px;margin-top:17px}
+.portfolio-lookbook #work-lightbox .lightbox-help{color:#85616d;font-size:11px}
+.lightbox-image-status{font-size:13px;color:#681e37;text-align:center;background:#f8e6e7;padding:12px;margin:10px 0 0}
+@keyframes lookbook-arrive{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(min-width:1800px){.lookbook-intro-inner,.lookbook-gallery{padding-inline:60px}}
+@media(max-width:1000px){.lookbook-intro-inner{gap:16px}.lookbook-collage{height:320px}.portfolio-lookbook .work-grid{gap:17px}.gallery-hint{display:none}.portfolio-lookbook .is-featured .lookbook-card-caption{padding:18px}.portfolio-lookbook .is-featured .lookbook-card-caption strong{font-size:25px}.portfolio-lookbook .is-featured .lookbook-feature-copy{font-size:11px}}
+@media(max-width:760px){
+ .lookbook-intro-inner{grid-template-columns:1fr;padding:24px 7% 30px;gap:22px}.portfolio-lookbook .work-back{margin-bottom:22px}
+ .portfolio-lookbook .portfolio-heading h1{font-size:clamp(43px,11vw,58px)}.portfolio-lookbook .portfolio-heading>p:last-of-type{font-size:14px;margin-bottom:12px}
+ .lookbook-collage{height:280px;max-width:380px}.lookbook-snapshot>span{font-size:12px;padding:9px 1px}.lookbook-snapshot{padding:5px 5px 0}.snapshot-1{top:38px}.snapshot-2{top:0}.snapshot-3{top:70px}
+ .lookbook-gallery{padding:34px 5% 38px}.gallery-heading{display:block;margin-bottom:20px}.gallery-heading h2{font-size:33px}.gallery-heading>p{font-size:12px;margin-top:14px}.gallery-heading .eyebrow{font-size:9px}
+ .lookbook-filterbar{padding:10px 0}.portfolio-lookbook .work-filters{width:100%;justify-content:space-between}.portfolio-lookbook .work-filter{padding:8px 12px;gap:7px;font-size:12px;min-height:44px}.portfolio-lookbook .work-status{font-size:10px;margin-bottom:18px;line-height:1.7}
+ .portfolio-lookbook .work-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 12px}.portfolio-lookbook .work-card{padding:6px;border-radius:6px}.lookbook-card-caption{padding:11px 2px 5px;gap:5px}.lookbook-card-caption small{font-size:8px;letter-spacing:1px}.lookbook-card-caption strong{font-size:16px}.lookbook-card-arrow{width:24px;height:24px;font-size:13px}
+ .portfolio-lookbook .work-card.is-featured{padding:8px}.portfolio-lookbook .is-featured .lookbook-card-caption{padding:22px 15px 15px}.portfolio-lookbook .is-featured .lookbook-card-caption strong{font-size:26px}.portfolio-lookbook .is-featured .lookbook-feature-copy{font-size:11px;margin-top:10px}.portfolio-lookbook .is-featured .lookbook-card-arrow{margin-top:12px}
+ .lookbook-cta{padding:18px 18px 0}.lookbook-cta-inner{padding:36px 19px 32px}.lookbook-cta h2{font-size:37px}.lookbook-cta p{font-size:13px}.lookbook-cta .lookbook-fine{font-size:10px}
+ .portfolio-lookbook #work-lightbox{padding:12px;border-width:4px;width:calc(100% - 16px)}.portfolio-lookbook .lightbox-stage{grid-template-columns:36px minmax(0,1fr) 36px;gap:5px}.portfolio-lookbook .lightbox-control{min-width:36px;min-height:44px;border-radius:24px}.portfolio-lookbook .lightbox-stage img{height:46dvh}.portfolio-lookbook .inspiration-action{width:100%;font-size:12px;padding:12px 8px}.portfolio-lookbook .lightbox-toolbar .eyebrow{font-size:8px;letter-spacing:1.1px}
+}
+@media(max-width:360px){.lookbook-collage{height:250px}.portfolio-lookbook .work-filter{padding-inline:8px;font-size:11px}.portfolio-lookbook .is-featured .lookbook-card-caption{padding-inline:10px}.portfolio-lookbook .is-featured .lookbook-card-caption strong{font-size:23px}.portfolio-lookbook .is-featured .lookbook-feature-copy{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.portfolio-lookbook .work-card,.lookbook-snapshot,.portfolio-lookbook .work-card img{animation:none;transition:none}.portfolio-lookbook .work-card:hover,.lookbook-snapshot:hover{transform:none}}
