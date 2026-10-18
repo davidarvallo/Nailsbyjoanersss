@@ -20,3 +20,11 @@ node --check portfolio-data.js
 ```
 
 The source archive remains intact. Extraction happens in memory; no temporary source photos are tracked. Image processing corrects EXIF orientation, applies reviewed crops, resizes without stretching, and encodes metadata-free WebP. Screenshot borders and controls are removed from larger display copies where present. This is a static site with no configured lint, TypeScript, or application build command. Vercel serves the repository root, so asset URLs intentionally include `/public/images/`.
+
+## Studio opening signature
+
+The homepage uses `intro.css`, `intro.js`, and a small fail-open bootstrap in `index.html`. The original transparent `White_NAILS_By_Joanersss_logo.png` (1524×1032) is displayed unchanged over the existing charcoal and muted-gold palette. Its reveal, masked gloss, fine highlight, and homepage fade take 3.2 seconds. There are no new runtime dependencies or build steps.
+
+The signature plays once per tab session, using `sessionStorage` and an appended, namespaced `window.name` marker only when storage writes fail. Reduced motion skips it. Tab or Escape dismisses it immediately. Page exit clears it before browser back/forward restoration. A 3.7-second independent watchdog clears the overlay if its controller fails; failed or late logo loads dismiss it sooner. The overlay is hidden by default, so disabled JavaScript or failed styles leave the homepage usable. The booking script does not control the intro timeline. Slow connections may skip the reveal rather than delay access to the site.
+
+QA: desktop Chromium (1440×1000) and mobile Chromium emulation (390×844), first visit/reload, portfolio filters/lightbox/return, mobile menu, service dialog, reduced motion, unavailable storage, missing logo/controller, disabled JavaScript, keyboard dismissal, and slow booking script. Physical iOS Safari and WebKit have not been tested.
