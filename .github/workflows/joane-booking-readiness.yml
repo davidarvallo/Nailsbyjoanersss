@@ -1,0 +1,28 @@
+name: Verify Joane booking readiness
+on:
+  push:
+    branches: [audit/joane-booking-readiness]
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check public production booking safely
+        run: |
+          node --input-type=module <<'JS'
+          const base='https://nailsbyjoanersss.vercel.app';
+          for (const path of ['/book','/admin','/api/booking?action=config']) {
+            try {
+              const r=await fetch(base+path,{signal:AbortSignal.timeout(12000),redirect:'follow'});
+              const type=r.headers.get('content-type')||'';
+              if(path.includes('action=config')&&type.includes('json')){
+                const j=await r.json();
+                console.log(JSON.stringify({path,status:r.status,ready:j.ready===true,open:j.open===true,hasDateBounds:!!j.minDate&&!!j.maxDate}));
+              } else {
+                console.log(JSON.stringify({path,status:r.status,contentType:type.split(';')[0],url:new URL(r.url).pathname}));
+              }
+            } catch(e){console.log(JSON.stringify({path,error:e.name+': '+e.message}));}
+          }
+          JS
