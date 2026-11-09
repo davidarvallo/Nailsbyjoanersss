@@ -1,19 +1,40 @@
-import {SERVICES,TIERS,TIMES,validateSlot,displayTime,durationFor,dateInLA,monthLimit,PEDICURES,validateSeason} from './booking-config.js';
+import {SERVICES,TIERS,TIMES,validateSlot,displayTime,durationFor,dateInLA,monthLimit,PEDICURES,validateSeason,nailArtEligible} from './booking-config.js';
 const $=s=>document.querySelector(s),form=$('#booking-form');let step=0,chosenTime='',open=false,activeToken='',config={};let slotVersion=0;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function api(url,options){const r=await fetch(url,options);const data=await r.json();if(!r.ok)throw new Error(data.error||'Please try again.');return data;}
-$('#services-options').innerHTML=SERVICES.map((s,i)=>`<label class="choice"><input type="radio" name="service" value="${s.id}" ${i===0?'checked':''}><strong>${s.name}</strong><span>${s.price?`$${s.price} · ${s.duration} min`:"Price quoted by Joane"}</span></label>`).join('');
+const initial=new URLSearchParams(location.search);
+const groupedOrder=['Acrylic Sets','Fills','Manicures & Overlays','Pedicures','Seasonal','Removal & Other'];
+const menuServices=SERVICES.filter(s=>!['acrylic','fill'].includes(s.id)||s.id===initial.get('service'));
+const groupFor=s=>s.menuGroup || (s.id.startsWith('pedi')?'Pedicures':s.seasonal?'Seasonal':'Removal & Other');
+$('#services-options').innerHTML=groupedOrder.map(group=>{
+ const list=menuServices.filter(s=>groupFor(s)===group);
+ if(!list.length)return '';
+ return '<fieldset class="service-choice-group"><legend>'+esc(group)+'</legend><div class="service-choice-grid">'+list.map(s=>
+  '<label class="choice"><input type="radio" name="service" value="'+esc(s.id)+'"><strong>'+esc(s.name)+'</strong><span>'+(s.price===null?'Price confirmed by Joane':s.price===undefined?'Price quoted by Joane':'$'+s.price)+' · '+(s.estimate?'estimated ':'')+(s.duration/60)+' hr</span></label>'
+ ).join('')+'</div></fieldset>';
+}).join('');
+form.elements.service.value=menuServices.some(s=>s.id===initial.get('service'))?initial.get('service'):'short-acrylic-set';
 $('#tier-options').innerHTML=TIERS.map((t,i)=>`<label class="art-choice"><input type="radio" name="tier" value="${t.id}" ${i===0?'checked':''}><strong>${t.name}${t.description?`<small class="tier-description">${esc(t.description)}</small>`:""}</strong><span>${t.price}</span></label>`).join('');
 $('#pedicure-options').innerHTML='<option value="">No pedicure</option>'+PEDICURES.map(s=>`<option value="${s.id}">${s.name} · $${s.price} · ${s.duration} min</option>`).join('');
-const initial=new URLSearchParams(location.search);if(SERVICES.some(s=>s.id===initial.get('service')))form.elements.service.value=initial.get('service');if(TIERS.some(t=>t.id===initial.get('tier')))form.elements.tier.value=initial.get('tier');
+if(SERVICES.some(s=>s.id===initial.get('service'))&&menuServices.some(s=>s.id===initial.get('service')))form.elements.service.value=initial.get('service');if(TIERS.some(t=>t.id===initial.get('tier')))form.elements.tier.value=initial.get('tier');
 if(initial.get('removal')==='true'&&form.elements.service.value==='acrylic')form.elements.service.value='acrylic-soak';
 form.elements.date.min=dateInLA();form.elements.date.max=monthLimit();
 function values(){return {service:form.elements.service.value,tier:form.elements.tier.value,removal:form.elements.service.value==='acrylic-soak'||form.elements.removal.checked,pedicure:form.elements.pedicure.value,location:form.elements.location.value,date:form.elements.date.value};}
 function sync(){
- const v=values();const fill=v.service==='fill',soak=!['acrylic','acrylic-soak','fill'].includes(v.service);$('#pedicure-field').hidden=soak;$('#pedicure-addon-note').hidden=!(v.service==='pedi1'||v.service==='pedi2'||v.pedicure==='pedi1'||v.pedicure==='pedi2');$('#shape-check').hidden=!fill;$('#length-field').hidden=soak;$('#art-field').hidden=soak;$('#removal-check').hidden=!fill;
- if(soak){form.elements.tier.value='none';form.elements.removal.checked=false;form.elements.pedicure.value='';}
+ const v=values();const service=SERVICES.find(s=>s.id===v.service);
+ const fill=v.service==='fill'||service?.menuGroup==='Fills';
+ const noArt=!nailArtEligible(v.service);
+ const removable=!noArt&&!fill&&v.service!=='acrylic-soak';
+ $('#pedicure-field').hidden=noArt;
+ $('#pedicure-addon-note').hidden=!(v.service==='pedi1'||v.service==='pedi2'||v.pedicure==='pedi1'||v.pedicure==='pedi2');
+ $('#shape-check').hidden=!fill;
+ $('#length-field').hidden=noArt||Boolean(service?.menuGroup);
+ $('#art-field').hidden=noArt;
+ $('#removal-check').hidden=!removable;
+ if(!removable)form.elements.removal.checked=false;
+ if(noArt){form.elements.tier.value='none';form.elements.pedicure.value='';}
  const data=values();const duration=durationFor(data.service,data.tier,data.service==='acrylic-soak'?false:data.removal,data.pedicure);const tier=TIERS.find(t=>t.id===data.tier);const deposit=chosenTime==='06:00'?35:20;
- $('#summary').innerHTML=[['Service',SERVICES.find(s=>s.id===data.service).name],['Nail art',soak?'Included in selected service':tier.id==='none'?'Solid color included':`${tier.name} (${tier.price})`],['Time reserved',`${Math.floor(duration/60)}h ${duration%60||''}${duration%60?'m':''}`],['Pedicure',PEDICURES.find(s=>s.id===data.pedicure)?.name||'No additional pedicure'],['Service price',SERVICES.find(s=>s.id===data.service).price?`$${SERVICES.find(s=>s.id===data.service).price}`:'Quoted by Joane'],['Location',data.location],['Date',data.date||'To be chosen'],['Time',chosenTime?displayTime(chosenTime):'To be chosen']].map(([k,v])=>`<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('');
+ $('#summary').innerHTML=[['Service',service.name],['Nail art',noArt?'Not applicable':tier.id==='none'?'Solid color included':`${tier.name} (${tier.price})`],['Time reserved',`${Math.floor(duration/60)}h ${duration%60||''}${duration%60?'m':''}${service.estimate?' (estimate)':''}`],['Pedicure',PEDICURES.find(s=>s.id===data.pedicure)?.name||'No additional pedicure'],['Service price',service.price===null||service.price===undefined?'Confirmed by Joane':`$${service.price} base`],['Location',data.location],['Date',data.date||'To be chosen'],['Time',chosenTime?displayTime(chosenTime):'To be chosen']].map(([k,v])=>`<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('');
  $('#deposit-amount').textContent=`$${deposit}`;$('#deposit-note').textContent=deposit===35?'Includes the $15 early appointment fee.':'Applied toward your appointment.';
 }
 function showStep(n){step=n;document.querySelectorAll('[data-step]').forEach(el=>el.hidden=Number(el.dataset.step)!==step);document.querySelectorAll('[data-step-indicator]').forEach(el=>el.classList.toggle('active',Number(el.dataset.stepIndicator)===step));$('#back').hidden=step===0;$('#next').hidden=step===2;$('#submit-booking').hidden=step!==2;$('#next').textContent=step===0?'Choose a time':'Your details';$('#form-error').textContent='';document.querySelector(`[data-step="${step}"] h2`).setAttribute('tabindex','-1');document.querySelector(`[data-step="${step}"] h2`).focus({preventScroll:true});}

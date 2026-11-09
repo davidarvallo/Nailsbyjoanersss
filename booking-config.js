@@ -1,6 +1,25 @@
 export const TIME_ZONE = 'America/Los_Angeles';
 export const LOCATIONS = ['San Bernardino', 'San Jacinto'];
 export const TIMES = ['06:00', '08:30', '11:30', '14:30', '17:00', '19:30'];
+// Service names, prices, and durations transcribed from Joane's two Square menu screenshots.
+// Long Acrylic Set is partially obscured in the source image; its price is intentionally unspecified.
+export const ADDITIONAL_SERVICES = [
+  {"id":"manicure","name":"Manicure","duration":120,"price":35,"menuGroup":"Manicures & Overlays","nailArt":true},
+  {"id":"builder-gel-mani","name":"Builder Gel Mani","duration":120,"price":40,"menuGroup":"Manicures & Overlays","nailArt":true},
+  {"id":"hard-gel-mani","name":"Hard Gel Mani","duration":120,"price":50,"menuGroup":"Manicures & Overlays","nailArt":true},
+  {"id":"acrylic-overlay","name":"Acrylic Overlay","duration":120,"price":55,"menuGroup":"Manicures & Overlays","nailArt":true},
+  {"id":"short-acrylic-set","name":"Short Acrylic Set","duration":120,"price":60,"menuGroup":"Acrylic Sets","nailArt":true},
+  {"id":"medium-acrylic-set","name":"Medium Acrylic Set","duration":120,"price":65,"menuGroup":"Acrylic Sets","nailArt":true},
+  {"id":"med-long-acrylic-set","name":"Med-Long Acrylic Set","duration":120,"price":75,"menuGroup":"Acrylic Sets","nailArt":true},
+  {"id":"long-acrylic-set","name":"Long Acrylic Set","duration":120,"price":null,"estimate":true,"menuGroup":"Acrylic Sets","nailArt":true},
+  {"id":"acrylic-overlay-fill","name":"Acrylic Overlay Fill","duration":120,"price":45,"menuGroup":"Fills","nailArt":true},
+  {"id":"short-set-fill","name":"Short Set Fill","duration":120,"price":50,"menuGroup":"Fills","nailArt":true},
+  {"id":"medium-set-fill","name":"Medium Set Fill","duration":120,"price":55,"menuGroup":"Fills","nailArt":true},
+  {"id":"med-long-set-fill","name":"Med-Long Set Fill","duration":120,"price":60,"menuGroup":"Fills","nailArt":true},
+  {"id":"long-set-fill","name":"Long Set Fill","duration":120,"price":65,"menuGroup":"Fills","nailArt":true},
+  {"id":"xl-set-fill","name":"XL Set Fill","duration":120,"price":70,"menuGroup":"Fills","nailArt":true},
+  {"id":"2xl-3xl-set-fill","name":"2XL-3XL Set Fill","duration":120,"price":75,"menuGroup":"Fills","nailArt":true}
+];
 export const SERVICES = [
   {id:'acrylic',name:'Full set',duration:150},
   {id:'acrylic-soak',name:'Full set + soak-off',duration:180},
@@ -9,7 +28,8 @@ export const SERVICES = [
   {id:'pedi3',name:'Tier 3 — Heavenly Luxury Pedicure',duration:120,price:85},
   {id:'fall-pedi',name:'Luxury Fall Pedicure + 10 Acrylic Toes',duration:150,price:130,seasonal:true},
   {id:'fill',name:'Fill — Joane’s work only',duration:150},
-  {id:'soak',name:'Soak-off',duration:150}
+  {id:'soak',name:'Soak-off',duration:150},
+  ...ADDITIONAL_SERVICES
 ];
 export const TIERS = [
   {id:'none',name:'Solid gel color',price:'Included'},
@@ -22,15 +42,16 @@ export const PEDICURES = SERVICES.filter(s=>s.id.startsWith('pedi'));
 export function validateSeason(service,date){
  if(service==='fall-pedi' && (date<'2026-10-01'||date>'2026-11-30')) throw new Error('Fall packages are available October 1–November 30, 2026.');
 }
-export function durationFor(service,tier,removal=false,pedicure=''){
-
+export function nailArtEligible(service) {
+  return ['acrylic','acrylic-soak','fill'].includes(service) || ADDITIONAL_SERVICES.some(s=>s.id===service && s.nailArt);
+}
+export function durationFor(service,tier,removal=false,pedicure='') {
   const base=SERVICES.find(s=>s.id===service);
   if(!base || !TIERS.some(t=>t.id===tier)) throw new Error('Choose a valid service and nail-art tier.');
-  const nailService=['acrylic','acrylic-soak','fill'].includes(service);
-  if(!nailService && (tier!=='none'||removal||pedicure)) throw new Error('Choose nail art and removal only with a nail set or fill.');
+  const nailService=nailArtEligible(service);
+  if(!nailService && (tier!=='none'||removal||pedicure)) throw new Error('Choose nail art and removal only with a nail set or manicure.');
   if(pedicure && !PEDICURES.some(s=>s.id===pedicure)) throw new Error('Choose a valid pedicure.');
   return base.duration + (nailService && service!=='acrylic-soak' && (tier==='tier4'||removal)?30:0) + (PEDICURES.find(s=>s.id===pedicure)?.duration||0);
-
 }
 export function dateInLA(date=new Date()){
   return new Intl.DateTimeFormat('en-CA',{timeZone:TIME_ZONE,year:'numeric',month:'2-digit',day:'2-digit'}).format(date);

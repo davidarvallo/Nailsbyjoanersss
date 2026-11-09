@@ -92,16 +92,9 @@ export function importJoaneArchive(archive='Nailsbtjoanersss.zip',dist='dist') {
     return {id,category:'pedicures',title:'Pedicure inspiration '+(i+1),alt:'Pedicure design by Joane, look '+(i+1),source:photo.filename,url,width,height};
   });
   appendFileSync(join(dist,'portfolio-data.js'),'\n// New pedicures, imported from Nailsbtjoanersss.zip at build time.\nwindow.PORTFOLIO_PHOTOS.push(...'+JSON.stringify(photos)+');\n');
-  const sheets=menus.map((menu,i)=>{
-    const url=save('services','joane-services-'+(i+1)+'.'+menu.extension,menu.bytes);
-    return '<a class="joane-service-sheet" href="'+url+'" target="_blank" rel="noopener" aria-label="Open service menu page '+(i+1)+' full size"><img src="'+url+'" alt="Joane service menu with offerings and prices, page '+(i+1)+'" loading="lazy" decoding="async"><span>View service menu '+(i+1)+' full size ↗</span></a>';
-  }).join('');
-  const section='<div class="joane-new-services" aria-labelledby="joane-menu-heading"><div class="joane-service-intro"><p class="eyebrow">MORE SERVICES &amp; PRICING</p><h3 id="joane-menu-heading">More ways to <em>treat yourself.</em></h3><p>Explore Joane’s service menus. Open an image for a full-size view of the offerings and pricing.</p></div><div class="joane-service-sheets">'+sheets+'</div><p class="joane-service-note">Have a question or want to book one of these services? <a href="sms:+19094969487">Text Joane for availability</a>.</p></div>';
-  const file=join(dist,'index.html');
-  const html=readFileSync(file,'utf8');
-  const marker='<div class="booking-facts">';
-  if(!html.includes(marker))throw Error('Cannot find homepage services insertion point');
-  writeFileSync(file,html.replace(marker,section+marker));
-  console.log('New archive: '+photos.length+' pedicure photos, '+menus.length+' service-menu images.');
-  return {pedicures:photos.length,menus:menus.length};
+  // The two service screenshots are used as reference material only.
+  // Their verified offerings are editable booking choices in booking-config.js.
+  // Do not publish or inject screenshots of the menu into the site.
+  console.log('New archive: '+photos.length+' pedicure photos; services use the booking menu.');
+  return {pedicures:photos.length,menus:0};
 }

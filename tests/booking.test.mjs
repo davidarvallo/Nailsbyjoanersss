@@ -1,6 +1,6 @@
 import {test} from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
 import {PGlite} from '@electric-sql/pglite';
-import {validateSlot,localInstant,holdExpiry,monthLimit,durationFor} from '../booking-config.js';
+import {validateSlot,localInstant,holdExpiry,monthLimit,durationFor,ADDITIONAL_SERVICES,nailArtEligible} from '../booking-config.js';
 import {authorized,cookie,session,verifyPassword} from '../lib/auth.js';
 import {scryptSync} from 'node:crypto';
 test('Pacific booking rules, month boundaries and DST',()=>{
@@ -61,4 +61,27 @@ test('current services reserve the complete nail and pedicure duration',()=>{
  assert.equal(durationFor('pedi1','none'),45);
  assert.throws(()=>durationFor('pedi1','tier2'));
  assert.throws(()=>durationFor('acrylic','none',false,'invalid'));
+});
+
+test('Joane photographed service menu is bookable with server-validated pricing and slots',()=>{
+ assert.equal(ADDITIONAL_SERVICES.length,15);
+ const expected={
+  manicure:35,'builder-gel-mani':40,'hard-gel-mani':50,'acrylic-overlay':55,
+  'short-acrylic-set':60,'medium-acrylic-set':65,'med-long-acrylic-set':75,
+  'acrylic-overlay-fill':45,'short-set-fill':50,'medium-set-fill':55,
+  'med-long-set-fill':60,'long-set-fill':65,'xl-set-fill':70,'2xl-3xl-set-fill':75
+ };
+ for(const service of ADDITIONAL_SERVICES){
+  assert.equal(service.duration,120,service.id);
+  assert.equal(nailArtEligible(service.id),true,service.id);
+  assert.equal(durationFor(service.id,'none'),120,service.id);
+  if(service.id==='long-acrylic-set'){
+   assert.equal(service.price,null);
+   assert.equal(service.estimate,true);
+  } else assert.equal(service.price,expected[service.id],service.id);
+ }
+ assert.equal(durationFor('short-acrylic-set','tier4'),150);
+ assert.equal(durationFor('short-acrylic-set','none',true),150);
+ assert.equal(durationFor('builder-gel-mani','none',false,'pedi1'),165);
+ assert.throws(()=>durationFor('bad-service','none'));
 });
