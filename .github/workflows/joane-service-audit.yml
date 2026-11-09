@@ -1,0 +1,46 @@
+name: Joane service menu audit (temporary)
+on:
+  push:
+    branches:
+      - research/joane-service-menu
+    paths:
+      - .github/workflows/joane-service-audit.yml
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Install image readers
+        run: |
+          python -m pip install --quiet Pillow
+          if ! command -v tesseract >/dev/null; then sudo apt-get update -qq && sudo apt-get install -y tesseract-ocr; fi
+      - name: Read service sheets
+        shell: bash
+        run: |
+          python - <<'PY'
+          import zipfile,io,base64,subprocess,tempfile,os
+          from PIL import Image,ImageOps
+          archive='Nailsbtjoanersss.zip'
+          with zipfile.ZipFile(archive) as z:
+              names=sorted((n for n in z.namelist() if not n.endswith('/') and 'service' in n.split('/')[-1].lower()),key=str.lower)
+              print('SERVICE_IMAGE_COUNT',len(names))
+              for idx,n in enumerate(names,1):
+                  image=ImageOps.exif_transpose(Image.open(io.BytesIO(z.read(n)))).convert('RGB')
+                  print('SERVICE_IMAGE_NAME',idx,repr(n),'SIZE',image.size)
+                  image.thumbnail((1600,2200))
+                  filename='/tmp/joane-sheet-'+str(idx)+'.png'
+                  image.save(filename)
+                  result=subprocess.run(['tesseract',filename,'stdout','--psm','6'],text=True,capture_output=True)
+                  print('SERVICE_OCR_BEGIN',idx)
+                  print(result.stdout)
+                  print('SERVICE_OCR_END',idx)
+                  image.thumbnail((1100,1600))
+                  buf=io.BytesIO()
+                  image.save(buf,'JPEG',quality=72,optimize=True)
+                  print('SERVICE_IMAGE_BASE64_',idx,'=',base64.b64encode(buf.getvalue()).decode(),sep='')
+          PY
