@@ -11,3 +11,19 @@ body{background:var(--wine);color:var(--cream)}header,.booking-header{background
 
 /* Seasonal menu stays scoped, leaving Joane's core identity intact. */
 #pedicures,#fall-deals{scroll-margin-top:100px}.menu-price{font-weight:700;color:#681e37;letter-spacing:.04em}.menu-note{margin-top:28px;line-height:1.7}.fall-menu{background-color:#f4e1c9;background-image:repeating-linear-gradient(0deg,transparent 0 46px,#96502a09 46px 52px),repeating-linear-gradient(90deg,transparent 0 46px,#96502a09 46px 52px);color:#452c25}.fall-intro{max-width:760px;margin-bottom:32px;line-height:1.7}.fall-menu .service-card{background:#fff8ef}.service-card details{margin:20px 0;line-height:1.6}.service-card summary{cursor:pointer;font-weight:600;padding:10px 0;min-height:44px}.spa-list{padding-left:20px;line-height:1.8}.freestyle-prices div{display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid #681e3730;padding:10px 0}.freestyle-prices dd{font-weight:700}.service-card .button{white-space:normal;text-align:center;max-width:100%;margin-top:16px}.service-card{min-width:0}.menu-price{overflow-wrap:anywhere}
+
+
+/* New service-price sheets imported from Joane's archive. */
+.joane-new-services{margin:48px 0 34px;padding:clamp(22px,4vw,44px);background:#f6e5e8;border:1px solid #dbaab7}
+.joane-service-intro{max-width:690px;margin-bottom:26px}
+.joane-service-intro h3{font-family:Georgia,serif;font-size:clamp(30px,4vw,48px);line-height:1.15;color:#681e37;margin:12px 0}
+.joane-service-intro h3 em{font-weight:400}
+.joane-service-intro p,.joane-service-note{line-height:1.7}
+.joane-service-sheets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;align-items:start}
+.joane-service-sheet{display:flex;flex-direction:column;gap:12px;text-decoration:none;color:#681e37;font-weight:700}
+.joane-service-sheet img{display:block;width:100%;height:auto;object-fit:contain;border:1px solid #d9b6c0;background:white;box-shadow:0 12px 30px #681e3714}
+.joane-service-sheet span{font-size:13px;line-height:1.4}
+.joane-service-sheet:focus-visible{outline:3px solid #681e37;outline-offset:5px}
+.joane-service-note{margin-top:24px}
+.joane-service-note a{color:#681e37;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:760px){.joane-new-services{margin:28px 0}.joane-service-sheets{grid-template-columns:1fr;gap:24px}}

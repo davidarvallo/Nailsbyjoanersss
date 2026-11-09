@@ -1,11 +1,13 @@
 import {readdirSync,cpSync,mkdirSync,rmSync,readFileSync,existsSync} from 'node:fs';
 import {execFileSync} from 'node:child_process';
+import {importJoaneArchive} from './import-joane-archive.mjs';
 for(const dir of ['.','api','lib','scripts'])for(const f of readdirSync(dir))if(/\.(js|mjs)$/.test(f))execFileSync(process.execPath,['--check',`${dir}/${f}`]);
 rmSync('dist',{recursive:true,force:true});mkdirSync('dist');
 for(const f of readdirSync('.'))if(/\.(html|css|js)$/.test(f))cpSync(f,`dist/${f}`);
 cpSync('White_NAILS_By_Joanersss_logo.png','dist/White_NAILS_By_Joanersss_logo.png');
 cpSync('IMG_9426.jpeg','dist/IMG_9426.jpeg');
 for(const dir of ['assets','public'])cpSync(dir,`dist/${dir}`,{recursive:true});
+importJoaneArchive();
 for(const file of readdirSync('dist').filter(f=>f.endsWith('.html'))){
  const html=readFileSync(`dist/${file}`,'utf8');
  for(const [,asset] of html.matchAll(/(?:src|href)="(\/[^"#?]+\.(?:js|css|png|jpg|webp))"/g))if(!existsSync('dist'+asset))throw new Error('Missing asset '+asset);

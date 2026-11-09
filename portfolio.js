@@ -37,7 +37,7 @@
     large.height = photo.height;
     large.alt = photo.alt;
     document.querySelector('#work-image-status').hidden = true;
-    large.src = `${photo.base}-large.webp`;
+    large.src = photo.url || `${photo.base}-large.webp`;
     caption.textContent = photo.alt;
     document.querySelector("#work-inspiration").href = `/book?inspiration=${encodeURIComponent(photo.id)}`;
     counter.textContent = `${activeIndex + 1} of ${viewing.length} · ${photo.category === 'nails' ? 'Nails' : 'Pedicures'}`;
@@ -64,8 +64,8 @@
       button.dataset.photo = photo.id;
       button.setAttribute('aria-label', `View larger: ${photo.alt}`);
       const img = document.createElement('img');
-      img.src = `${photo.base}-400.webp`;
-      img.srcset = `${photo.base}-400.webp 400w, ${photo.base}-800.webp 800w`;
+      img.src = photo.url || `${photo.base}-400.webp`;
+      if (!photo.url) img.srcset = `${photo.base}-400.webp 400w, ${photo.base}-800.webp 800w`;
       img.sizes = '(max-width: 760px) 44vw, (max-width: 1400px) 28vw, 400px';
       img.width = 800;
       img.height = 800;
@@ -81,7 +81,7 @@
       const categoryLabel = document.createElement('small');
       categoryLabel.textContent = photo.category === 'nails' ? 'NAIL ART' : 'PEDICURE';
       const title = document.createElement('strong');
-      title.textContent = titles[photo.id] || 'Made by Joane';
+      title.textContent = photo.title || titles[photo.id] || 'Made by Joane';
       text.append(categoryLabel, title);
       if (featured) {
         const note = document.createElement('span');
