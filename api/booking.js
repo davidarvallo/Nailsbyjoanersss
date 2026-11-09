@@ -94,7 +94,7 @@ export default async function handler(req,res){
   if(body.acceptPolicies!==true)fail('Please review and accept the booking policies.');
   const name=clean(body.name,100);const phone=clean(body.phone,30);const email=clean(body.email||'',150);
   if(name.length<2||phone.replace(/\D/g,'').length<10||phone.replace(/\D/g,'').length>15||(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)))fail('Enter a valid name, phone number, and email if provided.');
-  const data={service,tier,location,removal,pedicure,duration,name,phone,email,length:clean(body.length||'',40),shapeChange:body.shapeChange===true,notes:clean(body.notes||'',1000),deposit:time==='06:00'?35:20,policiesVersion:'2026-10-04',acceptPolicies:true};
+  const data={service,servicePrice:SERVICES.find(s=>s.id===service)?.price??null,tier,location,removal,pedicure,duration,name,phone,email,length:clean(body.length||'',40),shapeChange:body.shapeChange===true,notes:clean(body.notes||'',1000),deposit:time==='06:00'?35:20,policiesVersion:'2026-10-04',acceptPolicies:true};
   const token=randomToken();const id=randomToken().slice(0,12);const expiry=holdExpiry();
   const result=await db().query('SELECT reserve_booking($1,$2,$3,$4,$5,$6::jsonb) AS result',[id,hash(token),start.toISOString(),endAt(start,duration).toISOString(),expiry.toISOString(),JSON.stringify(data)]);
   if(result[0].result!=='ok')fail('That time was just taken. Please choose another slot.',409);

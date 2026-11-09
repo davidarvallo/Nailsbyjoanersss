@@ -10,3 +10,14 @@
 .policy-modal-header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 20px;position:sticky;top:0;background:#fffaf2;border-bottom:1px solid #ead4d9;z-index:1}
 .policy-modal-header h2{font-size:27px;margin:0}.policy-modal-header button{background:transparent;color:#542638;font-size:28px;border:0;min-width:44px;min-height:44px;cursor:pointer}
 .policy-modal-body{padding:8px 20px 24px}.policy-modal-body details{padding:14px 0;border-bottom:1px solid #ead4d9}.policy-modal-body summary{cursor:pointer;font-weight:600;line-height:1.5}.policy-modal-body p{font-size:14px;line-height:1.7;margin:12px 0}
+
+/* Service categories include Joane's published acrylic and fill choices. */
+#services-options{display:block;grid-template-columns:none}
+.service-choice-group{border:0;padding:0;margin:0 0 25px}
+.service-choice-group legend{font-size:22px;color:#681e37;font-family:Georgia,serif;padding-top:4px}
+.service-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.service-choice-grid .choice{min-width:0;background:#fffdf8;gap:6px}
+.service-choice-grid .choice:has(input:checked){background:#f8e4e8;border-color:#681e37}
+.service-choice-grid .choice input{accent-color:#681e37}
+.service-choice-grid .choice strong{font-size:14px}
+@media(max-width:650px){.service-choice-grid{grid-template-columns:1fr}.service-choice-grid .choice{padding:14px}}

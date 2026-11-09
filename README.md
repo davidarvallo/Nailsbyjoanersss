@@ -40,3 +40,7 @@ Homepage backgrounds reach the page edges at wide viewports. The Meet Joane flow
 ## Portfolio lookbook
 
 The portfolio uses its own `lookbook.css` layer: a blush photo collage, sticky filters with accurate counts, a three-column card gallery (two columns on mobile), occasional larger editorial cards, and a matching framed appointment invitation. All original photos remain available; each Load More page adds up to 11 looks. The cream-and-wine native dialog retains keyboard navigation, Escape dismissal, focus restoration, direct photo links, and the selected-look booking link. Hero photos also open the viewer. Card motion respects reduced motion; uploaded cheetah imagery is reserved for accents. Homepage gallery styles remain unchanged.
+
+## Updated bookable menu (November 2026)
+
+Joane's two service screenshots in `Nailsbtjoanersss.zip` have been transcribed into 15 individually selectable nail services. Names, listed base prices, and 120-minute slot durations live in `booking-config.js`, which is imported by the booking page, API, and homepage service menu. The screenshots are *not* displayed as menus anymore. The Long Acrylic Set price is obscured in its screenshot; the site clearly labels its price as requiring confirmation and two-hour slot duration as an estimate. Existing booking/deposit activation rules still apply.
