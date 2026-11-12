@@ -1,1 +1,1 @@
-Production admin setup verification checkpoint. Only the public ready/open status is checked; no passwords or session secrets are placed in GitHub Actions.
+Verify production readiness after BOOKING_ENABLED=true deployment. Public booking must remain closed until the studio dashboard explicitly enables booking and verified payment instructions are saved. Never log credentials.
