@@ -1,0 +1,22 @@
+name: Verify Neon deployment public API
+on:
+  push:
+    branches: [verify/neon-production-connection]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Inspect public booking configuration without secrets
+        run: |
+          node --input-type=module <<'JS'
+          const url='https://nailsbyjoanersss.vercel.app/api/booking?action=config';
+          const r=await fetch(url,{signal:AbortSignal.timeout(15000)});
+          const type=r.headers.get('content-type')||'';
+          if(!type.includes('json'))throw Error('Unexpected content-type: '+type);
+          const x=await r.json();
+          console.log(JSON.stringify({httpStatus:r.status,ready:x.ready===true,open:x.open===true,minDatePresent:!!x.minDate,maxDatePresent:!!x.maxDate,configurationError:x.error||null}));
+          if(!r.ok)process.exitCode=1;
+          JS
