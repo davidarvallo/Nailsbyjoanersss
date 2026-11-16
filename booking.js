@@ -70,7 +70,7 @@ async function loadReceipt(){
  const [status,title,copy]=labels[data.status]||['BOOKING STATUS','Your visit','Contact Joane for details.'];$('#receipt-status').textContent=status;$('#receipt-title').textContent=title;$('#receipt-copy').textContent=copy;
  const date=new Intl.DateTimeFormat('en-US',{timeZone:'America/Los_Angeles',dateStyle:'full',timeStyle:'short'}).format(new Date(data.start));
  $('#receipt-details').innerHTML=`<p><strong>${esc(date)} Pacific</strong></p><p>${esc(data.location)}</p><p>${esc(SERVICES.find(s=>s.id===data.service)?.name||'Nail appointment')}</p>${data.pedicure?`<p>Plus ${esc(PEDICURES.find(s=>s.id===data.pedicure)?.name||'pedicure')}</p>`:''}<p>Deposit: $${Number(data.deposit)} · Reference ${esc(data.id)}</p>`;
- $('#payment-panel').hidden=data.status!=='pending';$('#expiry-message').textContent=`Hold ends: ${new Intl.DateTimeFormat('en-US',{timeZone:'America/Los_Angeles',dateStyle:'medium',timeStyle:'short'}).format(new Date(data.expires))} Pacific. Paying alone does not confirm the visit; Joane verifies it.`;
+ $('#payment-panel').hidden=data.status!=='pending';if(config.testMode){$('#payment-panel h3').textContent='Test appointment: no payment needed';$('#payment-panel .zelle-payment')?.setAttribute('hidden','');$('#payment-instructions').textContent='TEST ONLY. Do not send any deposit for this appointment.';}$('#expiry-message').textContent=`Hold ends: ${new Intl.DateTimeFormat('en-US',{timeZone:'America/Los_Angeles',dateStyle:'medium',timeStyle:'short'}).format(new Date(data.expires))} Pacific. Paying alone does not confirm the visit; Joane verifies it.`;
  if(!$('#payment-instructions').textContent)$('#payment-instructions').textContent=config.paymentInstructions||'Text Joane at 909-496-9487 for verified Apple Pay or Zelle instructions.';
  $('#copy-link').onclick=async()=>{try{await navigator.clipboard.writeText(location.href);$('#copy-link').textContent='Link copied';}catch{$('#receipt-copy').textContent='Copy the private link from your browser address bar.';}};
 }
@@ -82,6 +82,7 @@ try{
  config=await api('/api/booking?action=config');open=config.open===true;
  form.elements.date.min=config.minDate;form.elements.date.max=config.maxDate;
  $('#submit-booking').disabled=!open;
+ if(config.testMode){$('#setup-message').hidden=false;$('#setup-message').textContent='TEST SITE. These are practice appointments. Do not send deposits.';}
  if(!open){$('#setup-message').hidden=false;$('#setup-message').textContent='Online booking is being prepared. Text Joane at 909-496-9487 to arrange your visit.';}
 }catch{open=false;$('#setup-message').hidden=false;$('#setup-message').textContent='Online booking is temporarily unavailable. Text Joane at 909-496-9487.';}
 if(form.elements.date.value)await loadSlots();
