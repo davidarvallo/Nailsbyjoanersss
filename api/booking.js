@@ -13,7 +13,7 @@ export default async function handler(req,res){
   if(req.method==='GET'){
    if(query.action==='config'){
     const ready=configured();let config={};if(ready)config=await settings();
-    return res.status(200).json({ready,open:ready&&process.env.BOOKING_ENABLED==='true'&&config.open===true,paymentInstructions:config.paymentInstructions||'',dates:config.dates||{},minDate:dateInLA(),maxDate:monthLimit()});
+    return res.status(200).json({ready,open:ready&&process.env.BOOKING_ENABLED==='true'&&config.open===true,paymentInstructions:process.env.BOOKING_TEST_MODE==='true'?'TEST ONLY. Never send a deposit for this preview.':config.paymentInstructions||'',testMode:process.env.BOOKING_TEST_MODE==='true',dates:config.dates||{},minDate:dateInLA(),maxDate:monthLimit()});
    }
    if(!configured())fail('Booking setup is still in progress. Please text Joane.',503);
    if(query.action==='admin'){
@@ -98,7 +98,7 @@ export default async function handler(req,res){
   const token=randomToken();const id=randomToken().slice(0,12);const expiry=holdExpiry();
   const result=await db().query('SELECT reserve_booking($1,$2,$3,$4,$5,$6::jsonb) AS result',[id,hash(token),start.toISOString(),endAt(start,duration).toISOString(),expiry.toISOString(),JSON.stringify(data)]);
   if(result[0].result!=='ok')fail('That time was just taken. Please choose another slot.',409);
-  return res.status(201).json({id,token,status:'pending',deposit:data.deposit,expires:expiry.toISOString(),paymentInstructions:config.paymentInstructions});
+  return res.status(201).json({id,token,status:'pending',deposit:data.deposit,expires:expiry.toISOString(),paymentInstructions:process.env.BOOKING_TEST_MODE==='true'?'TEST ONLY. No deposit should be sent.':config.paymentInstructions});
  }catch(error){
   const status=error.status||500;
   if(status===500)console.error('Booking request failed:',error.code||error.name);
