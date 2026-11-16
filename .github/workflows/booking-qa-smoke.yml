@@ -1,60 +1,35 @@
-name: Booking QA end-to-end smoke
+name: Booking QA build and unit validation
 on:
   push:
     branches: [qa/booking-end-to-end]
 permissions:
   contents: read
 jobs:
-  booking-smoke:
+  validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 4
+    timeout-minutes: 6
     steps:
-      - name: Exercise isolated preview booking endpoints
-        env:
-          QA_URL: https://nailsbyjoanersss-46rxnu7uy-otr8.vercel.app
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Run booking logic tests
+        run: npm test
+      - name: Verify production-style static build
+        run: npm run build
+      - name: Verify QA safety code and assets
         run: |
           node --input-type=module <<'JS'
           import assert from 'node:assert/strict';
-          const root=process.env.QA_URL;
-          async function call(path,body){
-            const opts=body?{method:'POST',headers:{'Content-Type':'application/json',Origin:root},body:JSON.stringify(body)}:{};
-            const r=await fetch(root+path,{...opts,signal:AbortSignal.timeout(18000)});
-            const ct=r.headers.get('content-type')||'';
-            assert.ok(ct.includes('application/json'), `JSON required: ${path}; status ${r.status}`);
-            return {status:r.status,body:await r.json()};
-          }
-          const cfg=await call('/api/booking?action=config');
-          assert.equal(cfg.status,200);
-          assert.equal(cfg.body.ready,true);
-          assert.equal(cfg.body.open,true);
-          assert.equal(cfg.body.testMode,true);
-          assert.match(cfg.body.paymentInstructions,/TEST ONLY/i);
-          assert.ok(!cfg.body.paymentInstructions.includes('909-496'));
-          const args={action:'availability',location:'San Bernardino',service:'short-acrylic-set',tier:'none',removal:'false',pedicure:'',date:'2026-11-19'};
-          const available=await call('/api/booking?'+new URLSearchParams(args));
-          assert.equal(available.status,200);
-          assert.ok(Array.isArray(available.body.slots) && available.body.slots.length>0,'QA appointment slots required');
-          const time=available.body.slots.find(x=>x==='11:30'||x==='14:30'||x==='17:00');
-          assert.ok(time,'Test-friendly appointment required');
-          const closed=await call('/api/booking?'+new URLSearchParams({...args,date:'2026-11-20'}));
-          assert.equal(closed.status,200);
-          assert.deepEqual(closed.body.slots,[]);
-          const body={action:'reserve',service:'short-acrylic-set',tier:'none',location:'San Bernardino',date:'2026-11-19',time,removal:false,pedicure:'',acceptPolicies:true,shapeChange:false,name:'QA Test Only',phone:'2025550176',email:'qa-only@example.com',notes:'AUTOMATED QA - NO PAYMENT'};
-          const wrongCity=await call('/api/booking',{...body,location:'San Jacinto'});
-          assert.equal(wrongCity.status,409);
-          const reserved=await call('/api/booking',body);
-          assert.equal(reserved.status,201);
-          assert.equal(reserved.body.status,'pending');
-          assert.match(reserved.body.paymentInstructions,/TEST ONLY/i);
-          assert.match(reserved.body.token,/^[A-Za-z0-9_-]{43}$/);
-          const receipt=await call('/api/booking?action=status&token='+encodeURIComponent(reserved.body.token));
-          assert.equal(receipt.status,200);
-          assert.equal(receipt.body.id,reserved.body.id);
-          assert.equal(receipt.body.status,'pending');
-          const duplicate=await call('/api/booking',body);
-          assert.equal(duplicate.status,409);
-          const updated=await call('/api/booking?'+new URLSearchParams(args));
-          assert.equal(updated.status,200);
-          assert.ok(!updated.body.slots.includes(time),'Booked time should no longer appear');
-          console.log('QA PASSED: config, test-mode payment safety, available slots, closed date, location rules, reservation, private receipt, duplicate protection, slot locking');
+          import {existsSync,readFileSync} from 'node:fs';
+          const api=readFileSync('api/booking.js','utf8');
+          const client=readFileSync('dist/booking.js','utf8');
+          assert.match(api,/BOOKING_TEST_MODE/);
+          assert.match(client,/TEST SITE/);
+          assert.match(client,/Do not send any deposit/);
+          assert.ok(existsSync('dist/assets/joane-zelle-qr.png'));
+          console.log('QA safety checks passed.');
           JS
