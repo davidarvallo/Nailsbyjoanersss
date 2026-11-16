@@ -1,5 +1,5 @@
 export const TIME_ZONE = 'America/Los_Angeles';
-export const LOCATIONS = ['San Bernardino', 'San Jacinto'];
+export const LOCATIONS = ['San Bernardino'];
 export const TIMES = ['06:00', '08:30', '11:30', '14:30', '17:00', '19:30'];
 // Service names, prices, and durations transcribed from Joane's two Square menu screenshots.
 // Long Acrylic Set is partially obscured in the source image; its price is intentionally unspecified.

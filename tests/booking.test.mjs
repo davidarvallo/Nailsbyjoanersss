@@ -1,9 +1,10 @@
 import {test} from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
 import {PGlite} from '@electric-sql/pglite';
-import {validateSlot,localInstant,holdExpiry,monthLimit,durationFor,ADDITIONAL_SERVICES,nailArtEligible} from '../booking-config.js';
+import {validateSlot,localInstant,holdExpiry,monthLimit,durationFor,ADDITIONAL_SERVICES,nailArtEligible,LOCATIONS} from '../booking-config.js';
 import {authorized,cookie,session,verifyPassword} from '../lib/auth.js';
 import {scryptSync} from 'node:crypto';
 test('Pacific booking rules, month boundaries and DST',()=>{
+ assert.deepEqual(LOCATIONS,['San Bernardino']);
  const now=new Date('2026-10-04T21:00:00Z');
  assert.equal(validateSlot('2026-10-06','06:00',now).toISOString(),'2026-10-06T13:00:00.000Z');
  assert.throws(()=>validateSlot('2026-10-05','08:30',now));
@@ -25,9 +26,9 @@ test('private admin session rejects tampering and missing configuration',()=>{
  assert.match(cookie(token),/HttpOnly/);assert.match(cookie(token),/SameSite=Strict/);
  delete process.env.SESSION_SECRET;assert.equal(authorized({headers:{cookie:`joane_session=${token}`}}),false);delete process.env.ADMIN_PASSWORD_HASH;
 });
-test('database reserves across both locations, releases expired holds, checks adjustments',async()=>{
+test('database reserves on one studio calendar, releases expired holds, checks adjustments',async()=>{
  const pg=new PGlite();await pg.exec(readFileSync(new URL('../lib/schema.sql',import.meta.url),'utf8'));
- const reserve=async(id,start,end,expiry='2099-01-01T00:00:00Z',block=false)=>{const r=await pg.query('SELECT reserve_booking($1,$2,$3,$4,$5,$6::jsonb,$7) AS result',[id,'hash-'+id,start,end,expiry,JSON.stringify({location:id==='b'?'San Jacinto':'San Bernardino'}),block]);return r.rows[0].result;};
+ const reserve=async(id,start,end,expiry='2099-01-01T00:00:00Z',block=false)=>{const r=await pg.query('SELECT reserve_booking($1,$2,$3,$4,$5,$6::jsonb,$7) AS result',[id,'hash-'+id,start,end,expiry,JSON.stringify({location:'San Bernardino'}),block]);return r.rows[0].result;};
  assert.equal(await reserve('a','2098-10-06T13:00Z','2098-10-06T16:00Z'),'ok');
  assert.equal(await reserve('b','2098-10-06T15:30Z','2098-10-06T18:00Z'),'conflict');
  assert.equal(await reserve('c','2098-10-06T16:00Z','2098-10-06T18:30Z'),'ok');
