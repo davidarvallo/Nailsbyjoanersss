@@ -1,0 +1,320 @@
+/* Nails by Joanersss | booking + studio UI refresh
+   Scoped to these two pages to preserve the public homepage. */
+.studio-redesign{
+  --sr-ink:#3f2631;--sr-wine:#67243f;--sr-wine-hover:#82324f;
+  --sr-muted:#70525d;--sr-paper:#fffdf9;--sr-cream:#fbf5ef;
+  --sr-blush:#f8e9ec;--sr-line:#e7d6d8;--sr-shadow:0 16px 46px rgba(68,29,49,.055);
+  background:#fbf5ef;color:var(--sr-ink);font:16px/1.58 Arial,Helvetica,sans-serif;
+}
+.studio-redesign,.studio-redesign *{box-sizing:border-box}
+.studio-redesign p,.studio-redesign li{line-height:1.63}
+.studio-redesign h1,.studio-redesign h2,.studio-redesign h3{color:var(--sr-ink);line-height:1.15}
+.studio-redesign a,.studio-redesign button,.studio-redesign input,.studio-redesign select{touch-action:manipulation}
+.studio-redesign button,.studio-redesign a.button{transition:background-color .16s ease,border-color .16s ease,box-shadow .16s ease,transform .16s ease}
+.studio-redesign .button.gold{background:var(--sr-wine);color:#fffdfa;border:1px solid var(--sr-wine);border-radius:10px}
+.studio-redesign .button.gold:hover{background:var(--sr-wine-hover);transform:translateY(-1px)}
+.studio-redesign .button.outline,.studio-redesign .outline{background:#fffdfa;border:1px solid #c5a5ad;color:var(--sr-wine);border-radius:10px}
+.studio-redesign .button.outline:hover,.studio-redesign .outline:hover{background:#f9e8ec}
+.studio-redesign :is(button,a,input,select,textarea,summary):focus-visible{outline:3px solid #b66a86;outline-offset:3px}
+.studio-redesign .booking-header{padding:12px max(4%,24px);min-height:90px;background:#5d2039;color:#fff8f0}
+.studio-redesign .booking-header .brand img{object-fit:contain;max-width:144px;max-height:73px}
+.studio-redesign .booking-header .text-link{color:#fff5ee;font-size:14px}
+.studio-redesign .eyebrow{font-weight:700;letter-spacing:.14em;font-size:11px;color:#905069}
+
+/* Customer booking: elevated, quietly branded workspace. */
+.studio-redesign .booking-shell{
+  width:min(1350px,100%);max-width:none;margin:auto;padding:40px clamp(18px,3.8vw,56px) 90px;
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,320px);
+  align-items:start;gap:26px;
+}
+.studio-redesign .booking-work{
+  position:relative;min-width:0;background:var(--sr-paper);
+  border:1px solid var(--sr-line);border-radius:17px;
+  box-shadow:var(--sr-shadow);padding:42px clamp(23px,3.1vw,49px) 42px;overflow:visible;
+}
+.studio-redesign .booking-work::before{
+  content:"";position:absolute;left:0;right:0;top:0;height:7px;border-radius:16px 16px 0 0;
+  background:url('/IMG_9426.jpeg') center/260px auto repeat;opacity:.43;pointer-events:none;
+}
+.studio-redesign .booking-work h1{font-size:clamp(38px,4.1vw,56px);letter-spacing:-.035em;margin:8px 0 12px;max-width:680px}
+.studio-redesign .booking-work h1 em{color:#a24869}
+.studio-redesign .booking-lead{font-size:16px;line-height:1.65;color:var(--sr-muted);max-width:640px;margin:0 0 22px}
+.studio-redesign .booking-intro-facts{display:flex;flex-wrap:wrap;gap:9px;margin:20px 0 25px}
+.studio-redesign .booking-intro-facts span{
+  padding:8px 12px;border:1px solid #e9d7d8;border-radius:999px;
+  background:#fcf0ed;color:#663b4c;font-size:12px;font-weight:700;letter-spacing:.015em
+}
+.studio-redesign #setup-message{border-radius:9px;margin:16px 0 18px}
+.studio-redesign .progress{
+  counter-reset:step;background:#fbf3f0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:6px;border:1px solid #ead5d8;border-radius:13px;padding:7px;margin:24px 0 36px;
+  scroll-margin-top:24px
+}
+.studio-redesign .progress li{
+  display:flex;gap:10px;align-items:center;min-width:0;position:relative;
+  margin:0;padding:12px 10px;color:#715963;border:0;border-radius:9px;
+  font-size:13px;font-weight:600;line-height:1.25
+}
+.studio-redesign .progress li.active{background:#fffefa;border:1px solid #e1c6ce;color:#60243d;box-shadow:0 3px 12px #6330490b;padding:11px 9px}
+.studio-redesign .progress li.complete{color:#55725b}
+.studio-redesign .progress li .step-index{
+  display:grid;place-items:center;width:34px;height:34px;min-width:34px;border-radius:50%;
+  border:1px solid #ddc4cc;background:#fffaf7;color:#77485a;font-size:12px;line-height:1;font-weight:800
+}
+.studio-redesign .progress li.active .step-index{background:var(--sr-wine);border-color:var(--sr-wine);color:white}
+.studio-redesign .progress li.complete .step-index{background:#e1ecdf;border-color:#bed6c0;color:#466d50}
+.studio-redesign .progress li .step-label{display:block;line-height:1.25}
+.studio-redesign .form-step{min-width:0}
+.studio-redesign .step-kicker{margin:0 0 7px!important;color:#9b5870;font-size:11px!important;line-height:1.3;letter-spacing:.16em;font-weight:800;text-transform:uppercase}
+.studio-redesign .step-description{margin:0 0 23px;color:var(--sr-muted);font-size:15px;line-height:1.63}
+.studio-redesign .form-step h2{font-size:clamp(28px,3vw,36px);margin:0 0 11px;letter-spacing:-.025em}
+.studio-redesign .form-step:not([hidden]),.studio-redesign #receipt:not([hidden]){animation:sr-step-appear .31s ease both}
+.studio-redesign .service-accordion{
+  border:1px solid var(--sr-line);border-radius:12px;overflow:hidden;background:#fffdf9;margin:0 0 11px;
+}
+.studio-redesign .service-accordion[open]{border-color:#cf9eae;box-shadow:0 4px 18px #5d203908}
+.studio-redesign .service-accordion>summary{
+  list-style:none;display:flex;align-items:center;justify-content:space-between;gap:13px;
+  padding:16px 19px;cursor:pointer;background:#fffdf9;color:#512b3e;
+  font-size:17px;font-weight:800;line-height:1.3;min-height:60px;
+}
+.studio-redesign .service-accordion>summary::-webkit-details-marker{display:none}
+.studio-redesign .service-accordion[open]>summary{background:#fbebee;border-bottom:1px solid #e7cbd2}
+.studio-redesign .service-accordion .service-count{font-size:12px;font-weight:600;color:#896374;white-space:nowrap}
+.studio-redesign .service-chevron{font-size:20px;font-weight:400;margin-left:8px;display:inline-block;transition:transform .16s ease}
+.studio-redesign .service-accordion[open] .service-chevron{transform:rotate(180deg)}
+.studio-redesign .service-accordion .service-choice-group{margin:0;padding:15px 15px 17px;border:0}
+.studio-redesign .service-choice-group legend{position:absolute;clip:rect(0,0,0,0);clip-path:inset(50%);width:1px;height:1px;overflow:hidden}
+.studio-redesign .service-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.studio-redesign .service-choice-grid .choice{
+  display:grid;grid-template-columns:18px minmax(0,1fr);gap:4px 10px;align-content:center;
+  border:1px solid #e4d3d8;border-radius:9px;min-height:94px;margin:0;
+  padding:14px 13px;background:#fff;color:#452b36;cursor:pointer;
+}
+.studio-redesign .service-choice-grid .choice:hover{border-color:#b77f94;background:#fff9f8}
+.studio-redesign .service-choice-grid .choice:has(input:checked){border-color:#863958;background:#fbe9ee;box-shadow:inset 0 0 0 1px #863958}
+.studio-redesign .service-choice-grid .choice input{grid-row:1/3;grid-column:1;align-self:center;margin:0;width:17px;height:17px}
+.studio-redesign .service-choice-grid .choice strong{grid-column:2;grid-row:1;font-size:15px;line-height:1.37;color:#402432;font-weight:800}
+.studio-redesign .service-choice-grid .choice span{grid-column:2;grid-row:2;color:#704d60;font-size:13px;line-height:1.35}
+.studio-redesign .booking-note-details{background:#faf1ee;border:1px solid #e3cfd4;border-radius:11px;margin:20px 0 28px;overflow:hidden}
+.studio-redesign .booking-note-details>summary{cursor:pointer;min-height:54px;padding:14px 17px;color:#5c3143;font-weight:800;font-size:14px}
+.studio-redesign .booking-note-details[open]>summary{border-bottom:1px solid #e2ccd2}
+.studio-redesign .booking-note-details .booking-rules{margin:0;padding:15px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.studio-redesign .booking-note-details .rule-card{padding:16px;background:#fffcf9;border:1px solid #ead8db;border-radius:9px}
+.studio-redesign .booking-note-details .rule-card h3{font-size:19px;line-height:1.25}
+.studio-redesign .booking-note-details .rule-card p{font-size:13px;line-height:1.55}
+.studio-redesign .booking-note-details .rule-card a{font-size:13px}
+.studio-redesign #art-field{margin:26px 0}
+.studio-redesign .art-options{gap:9px}
+.studio-redesign .art-choice{background:#fff;border:1px solid #e4d3d8;border-radius:9px;min-height:64px;padding:13px 16px}
+.studio-redesign .art-choice:has(input:checked){background:#fbe9ee;border-color:#863958}
+.studio-redesign .art-choice strong{font-size:14px;color:#402432}
+.studio-redesign .art-choice>span{color:#652d49;font-size:14px;font-weight:700}
+.studio-redesign .field,.studio-redesign .admin-form label{font-size:14px;color:#482936;font-weight:800;gap:9px}
+.studio-redesign .field input,.studio-redesign .field select,.studio-redesign .field textarea,
+.studio-redesign .admin-form input,.studio-redesign .admin-form select,.studio-redesign .admin-form textarea{
+  border:1px solid #d7bcc4;border-radius:9px;background:#fff;color:#392833;
+  min-height:49px;padding:12px 14px;font:16px/1.45 Arial,Helvetica,sans-serif
+}
+.studio-redesign .field input:hover,.studio-redesign .field select:hover,.studio-redesign .field textarea:hover,
+.studio-redesign .admin-form input:hover,.studio-redesign .admin-form select:hover{border-color:#aa7488}
+.studio-redesign .check{padding:11px 13px;background:#fff9f7;border:1px solid #ecdde0;border-radius:8px;min-height:50px;align-items:center;font-weight:500}
+.studio-redesign .check input{margin:0}
+.studio-redesign .helper{color:#654f59;font-size:14px;line-height:1.65}
+.studio-redesign .helper a{color:#792d4b;font-weight:700}
+.studio-redesign .studio-location-value{border:1px solid #ead1d7;background:#fff7f5;border-radius:9px;padding:14px 17px;color:#4d2839;font-weight:700}
+.studio-redesign [data-step="1"]>.field{max-width:500px}
+.studio-redesign [data-step="1"]>fieldset{margin-top:25px}
+.studio-redesign #slot-options{margin-top:13px}
+.studio-redesign .slots{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.studio-redesign .slot{background:#fff;border:1px solid #ddc7cd;border-radius:10px;min-height:57px;font-size:15px;font-weight:750;color:#582b43}
+.studio-redesign .slot:hover{background:#fff5f7;border-color:#b5768e}
+.studio-redesign .slot[aria-pressed=true]{background:var(--sr-wine);border-color:var(--sr-wine);color:white;box-shadow:0 5px 12px #6c284323}
+.studio-redesign #slot-message{margin:17px 0 0;color:#70515d;font-size:14px;min-height:23px}
+.studio-redesign .policy-callout,.studio-redesign .inspiration-upload{border-radius:11px;border:1px solid var(--sr-line);background:#fffaf7;padding:21px}
+.studio-redesign .policy-callout h3{font-size:24px;margin:0 0 14px}
+.studio-redesign .policy-callout p{font-size:14px;line-height:1.65;margin:0 0 13px}
+.studio-redesign .policy-open{color:#702849;font-weight:750}
+.studio-redesign .form-actions{display:flex;justify-content:flex-end;align-items:center;gap:11px;padding:21px 0 0;border-top:1px solid #ebdfe0;margin-top:27px}
+.studio-redesign .form-actions .button{border-radius:10px;min-height:52px;min-width:143px;font-weight:750;font-size:14px}
+.studio-redesign .form-error{color:#993f50;font-size:14px;font-weight:700;line-height:1.5}
+.studio-redesign .booking-summary{
+  position:sticky;top:25px;background:#fff9f7!important;border:1px solid #e5cbd1!important;
+  border-top:4px solid #a4516e!important;border-image:none!important;border-radius:14px;
+  padding:28px 24px;box-shadow:var(--sr-shadow);color:var(--sr-ink)!important
+}
+.studio-redesign .booking-summary h2{font:normal 32px/1.03 Georgia,serif;margin:8px 0 25px}
+.studio-redesign .booking-summary h2 em{color:#a04766}
+.studio-redesign .booking-summary .eyebrow{color:#8c5570}
+.studio-redesign .booking-summary dl>div{padding:12px 0;align-items:baseline;border-color:#e7d5d8;gap:12px;font-size:14px}
+.studio-redesign .booking-summary dt{color:#70515d!important;flex:0 0 39%;font-size:13px}
+.studio-redesign .booking-summary dd{font-size:14px;font-weight:700;max-width:61%;color:#432736!important;line-height:1.45}
+.studio-redesign .summary-deposit{border-radius:11px;background:#f4dfe5;margin:20px 0 0;padding:19px}
+.studio-redesign .summary-deposit strong{font:normal 43px Georgia,serif;color:var(--sr-wine)!important}
+.studio-redesign .summary-deposit>span{font-weight:700;color:#592b41}
+.studio-redesign .summary-deposit p{font-size:12px;color:#674552!important;margin:0}
+.studio-redesign .booking-summary>.helper{color:#6c535e!important;font-size:12px;line-height:1.62;margin:17px 0}
+.studio-redesign .booking-summary .summary-footer{border-color:#e7d5d8;font-size:13px}
+.studio-redesign #receipt{border:1px solid #ead4d9;background:#fffaf8;border-radius:12px;padding:24px}
+.studio-redesign #receipt .eyebrow{color:#8a3c5e}
+.studio-redesign #receipt h2{font-size:clamp(30px,3.4vw,42px);margin:12px 0}
+.studio-redesign #receipt-copy{color:#614c55}
+.studio-redesign .receipt-details{border:1px solid #e3cbd2;border-radius:10px;background:#fff;padding:18px 20px}
+.studio-redesign #payment-panel{background:#fae7ec;border-radius:12px;padding:22px}
+.studio-redesign .zelle-payment{border-radius:10px}
+.studio-redesign #receipt .button{min-height:45px;border-radius:10px}
+.studio-redesign .selected-inspiration{border-radius:10px}
+
+/* Joane's studio: crisp sections, navigation, and appointments. */
+.studio-redesign .admin-shell{width:min(1380px,100%);max-width:none;margin:auto;padding:37px clamp(18px,3.5vw,50px) 90px}
+.studio-redesign .admin-hero{
+  position:relative;background:linear-gradient(125deg,#fffdf9 0%,#fffdf9 60%,#f7e5e8 100%);
+  border:1px solid var(--sr-line);border-radius:16px;padding:26px clamp(22px,3vw,36px);
+  box-shadow:var(--sr-shadow);margin-bottom:18px;overflow:hidden
+}
+.studio-redesign .admin-hero::after{content:"";position:absolute;top:0;right:0;height:100%;width:7px;background:url('/IMG_9426.jpeg') center/200px auto repeat;opacity:.45}
+.studio-redesign .admin-hero h1{font:normal clamp(36px,4vw,50px)/1.1 Georgia,serif;letter-spacing:-.025em;margin:7px 0 9px}
+.studio-redesign .admin-hero h1 em{color:#a04769}
+.studio-redesign .admin-hero p:not(.eyebrow){color:var(--sr-muted);font-size:15px;max-width:640px;margin:0}
+.studio-redesign .admin-hero-inner{display:flex;justify-content:space-between;gap:18px;align-items:center}
+.studio-redesign .admin-hero .button{flex-shrink:0;min-height:46px}
+.studio-redesign .admin-login-card{max-width:490px;border:1px solid #e6d1d6;border-radius:13px;background:white;padding:25px 26px;box-shadow:var(--sr-shadow);margin:34px auto}
+.studio-redesign .admin-login-card:before{content:"PRIVATE STUDIO ACCESS";display:block;color:#855267;font-size:11px;font-weight:800;letter-spacing:.13em}
+.studio-redesign .admin-login-card .button{min-height:48px}
+.studio-redesign #dashboard{animation:sr-section-appear .32s ease both}
+.studio-redesign .studio-quick-nav{
+  display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:17px 0 23px;padding:8px;
+  background:#fffdf9;border:1px solid #e7d4d8;border-radius:12px;box-shadow:0 4px 14px #5d233609;
+}
+.studio-redesign .studio-quick-nav a{
+  min-height:43px;display:inline-flex;align-items:center;justify-content:center;padding:9px 16px;
+  color:#5e3244;text-decoration:none;border-radius:8px;font-size:14px;font-weight:750;
+}
+.studio-redesign .studio-quick-nav a:hover,.studio-redesign .studio-quick-nav a:focus-visible{background:#f9e9ed}
+.studio-redesign .studio-quick-nav a.is-active{background:#6a2843;color:#fff}
+.studio-redesign .admin-mode{border-radius:10px;margin:16px 0 21px;font-size:14px}
+.studio-redesign .admin-stats{gap:13px;margin:16px 0 32px}
+.studio-redesign .admin-stats>div{
+  position:relative;background:#fffdf9;border-radius:12px;padding:20px 18px 18px;
+  border:1px solid #e7d4d8;box-shadow:0 4px 18px #612a4208;
+}
+.studio-redesign .admin-stats>div::before{content:"";position:absolute;width:31px;height:3px;background:#b8708d;top:16px;right:17px;border-radius:2px}
+.studio-redesign .admin-stats strong{font:normal 42px Georgia,serif;color:#63253f}
+.studio-redesign .admin-stats span{font-size:13px;font-weight:650;color:#70505c;margin-top:6px}
+.studio-redesign .admin-section-head{margin:27px 0 18px;align-items:end}
+.studio-redesign .admin-section-head h2{font-size:clamp(30px,3.1vw,39px);margin:5px 0 9px}
+.studio-redesign .admin-section-head .helper{font-size:14px;line-height:1.58}
+.studio-redesign .admin-calendar-section,.studio-redesign .admin-appointments-section{scroll-margin-top:25px}
+.studio-redesign .admin-calendar-layout{gap:16px;grid-template-columns:minmax(0,1.35fr) minmax(285px,.83fr)}
+.studio-redesign .admin-calendar-panel,.studio-redesign .admin-day-panel{
+  background:#fffefa;border:1px solid #e7d4d8;border-radius:14px;box-shadow:var(--sr-shadow);
+  padding:22px;min-width:0
+}
+.studio-redesign .admin-calendar-header h3{font-size:27px}
+.studio-redesign .admin-calendar-header button{border-radius:9px;color:#62273f}
+.studio-redesign .admin-calendar-grid button{border:1px solid #eedee1;background:#fff;border-radius:9px;min-height:78px;transition:background-color .16s,border-color .16s,transform .16s}
+.studio-redesign .admin-calendar-grid button:hover{transform:translateY(-1px);border-color:#b5758d}
+.studio-redesign .admin-calendar-grid button.is-selected{border:2px solid #873253;background:#fbedf1}
+.studio-redesign .admin-day-panel{background:#fcf2ef}
+.studio-redesign .admin-day-panel h3{font-size:27px}
+.studio-redesign .admin-day-appointment{background:white;border-radius:10px;padding:15px}
+.studio-redesign .admin-day-appointment strong{font-size:15px}
+.studio-redesign #day-appointments{animation:sr-section-appear .24s ease both}
+.studio-redesign .admin-toolbar{background:#fffefa;border-radius:12px;padding:17px 19px;border:1px solid #e7d4d8;box-shadow:0 4px 18px #62263e08}
+.studio-redesign .admin-toolbar label{color:#5b3948;font-size:13px}
+.studio-redesign .admin-toolbar select,.studio-redesign .admin-toolbar input{border-radius:9px;font-size:15px;min-height:47px}
+.studio-redesign .admin-toolbar .button{min-height:47px;padding:10px 18px}
+.studio-redesign .admin-list{gap:12px}
+.studio-redesign .admin-list-summary{margin:16px 0 19px;font-size:13px;color:#765765}
+.studio-redesign .admin-list>.admin-group-heading{font:normal 24px Georgia,serif;color:#583045;margin:16px 0 0;border-bottom:1px solid #ecdbe0;padding-bottom:8px}
+.studio-redesign .request-card{background:#fffefa;border:1px solid #e4d1d6;box-shadow:var(--sr-shadow);padding:25px;border-radius:13px;animation:sr-section-appear .28s ease both}
+.studio-redesign .request-top h3{font-size:25px}
+.studio-redesign .request-card p{font-size:14px;line-height:1.58}
+.studio-redesign .request-card .admin-when{font-size:16px;color:#5c2440;margin:14px 0 5px}
+.studio-redesign .request-card .admin-appointment-sub{color:#765561}
+.studio-redesign .request-card .admin-card-grid{margin:19px 0;gap:9px 18px}
+.studio-redesign .request-card .admin-card-grid strong{color:#54283f}
+.studio-redesign .request-card .admin-notes{background:#fbebef;border-radius:10px}
+.studio-redesign .request-card .admin-card-actions{border-top:1px solid #eddde0;padding-top:17px;margin-top:20px}
+.studio-redesign .request-card .admin-card-actions .button{min-height:45px}
+.studio-redesign .status{border-radius:999px;font-weight:750;letter-spacing:.025em;font-size:11px}
+.studio-redesign .admin-management-panels{display:grid;grid-template-columns:1fr 1fr;gap:16px;border:0;margin:31px 0}
+.studio-redesign .admin-management-panels .admin-panel{
+  max-width:none;border:1px solid #e5cfd5;background:#fffefa;border-radius:13px;
+  box-shadow:var(--sr-shadow);padding:23px;min-width:0;margin:0;scroll-margin-top:25px
+}
+.studio-redesign .admin-panel summary{font:normal 25px Georgia,serif;color:#552b42;margin-bottom:15px;cursor:pointer}
+.studio-redesign .admin-panel .admin-form{max-width:none}
+.studio-redesign .admin-message:not(:empty){position:fixed;z-index:30;right:22px;top:106px;max-width:min(440px,calc(100vw - 40px));border-radius:10px;box-shadow:0 15px 45px #4e263535;background:#fff9f8;padding:15px 18px;animation:sr-toast-in .24s ease both}
+.studio-redesign #reschedule-dialog{border-radius:14px;border:1px solid #e6cdd4;background:#fffaf6}
+.studio-redesign #reschedule-dialog::backdrop{background:#2b162a91}
+.studio-redesign .admin-panel .check{align-items:center}
+
+/* Lightweight, motion-sensitive transitions on steps and page navigation. */
+@keyframes sr-step-appear{from{opacity:0;transform:translateY(11px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sr-section-appear{from{opacity:.35;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sr-toast-in{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.studio-redesign .booking-work,.studio-redesign .admin-hero{animation:sr-section-appear .4s ease both}
+@view-transition{navigation:auto}
+::view-transition-old(root){animation:sr-fade-out .13s ease both}
+::view-transition-new(root){animation:sr-fade-in .19s ease both}
+@keyframes sr-fade-out{to{opacity:0}}
+@keyframes sr-fade-in{from{opacity:0}to{opacity:1}}
+@media(max-width:1090px){
+ .studio-redesign .booking-shell{grid-template-columns:minmax(0,1fr) 280px;gap:17px;padding-inline:19px}
+ .studio-redesign .booking-work{padding:35px 27px}
+ .studio-redesign .booking-summary{padding:22px 20px}
+ .studio-redesign .booking-note-details .booking-rules{grid-template-columns:1fr}
+ .studio-redesign .admin-calendar-layout{grid-template-columns:1fr}
+}
+@media(max-width:810px){
+ .studio-redesign .booking-shell{display:flex;flex-direction:column;padding:26px 17px 55px;gap:19px}
+ .studio-redesign .booking-work{width:100%;padding:33px 24px}
+ .studio-redesign .booking-summary{position:static;order:2;width:100%}
+ .studio-redesign .admin-management-panels{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+ .studio-redesign .booking-header{min-height:73px;padding:8px 16px}
+ .studio-redesign .booking-header .brand img{max-height:56px}
+ .studio-redesign .booking-shell{padding:14px 10px 40px}
+ .studio-redesign .booking-work{padding:29px 17px 26px;border-radius:13px}
+ .studio-redesign .booking-work h1{font-size:39px}
+ .studio-redesign .booking-lead{font-size:15px}
+ .studio-redesign .booking-intro-facts{gap:7px}
+ .studio-redesign .booking-intro-facts span{padding:6px 9px;font-size:11px}
+ .studio-redesign .progress{gap:2px;padding:5px;margin:22px 0 30px}
+ .studio-redesign .progress li{flex-direction:column;align-items:center;gap:6px;text-align:center;font-size:11px;padding:10px 4px}
+ .studio-redesign .progress li.active{padding:9px 3px}
+ .studio-redesign .progress li .step-index{min-width:30px;width:30px;height:30px}
+ .studio-redesign .service-accordion>summary{padding:15px 13px;font-size:15px}
+ .studio-redesign .service-accordion .service-choice-group{padding:11px}
+ .studio-redesign .service-choice-grid{grid-template-columns:1fr}
+ .studio-redesign .service-choice-grid .choice{min-height:73px}
+ .studio-redesign .slots{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .studio-redesign .form-step h2{font-size:29px}
+ .studio-redesign .form-actions{position:sticky;bottom:0;z-index:4;background:#fffdf9ef;padding:12px 0 calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid #e9d8dc;backdrop-filter:blur(8px);margin-top:22px}
+ .studio-redesign .form-actions .button{flex:1;min-width:0}
+ .studio-redesign #receipt{padding:16px}
+ .studio-redesign .booking-summary{padding:24px 20px}
+ .studio-redesign .admin-shell{padding:18px 12px 55px}
+ .studio-redesign .admin-hero{padding:23px 18px;border-radius:12px}
+ .studio-redesign .admin-hero-inner{align-items:flex-start;flex-direction:column}
+ .studio-redesign .admin-hero h1{font-size:37px}
+ .studio-redesign .studio-quick-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ .studio-redesign .studio-quick-nav a{font-size:13px}
+ .studio-redesign .admin-stats{gap:8px}
+ .studio-redesign .admin-stats>div{padding:18px 12px}
+ .studio-redesign .admin-stats strong{font-size:34px}
+ .studio-redesign .admin-calendar-panel,.studio-redesign .admin-day-panel{padding:12px}
+ .studio-redesign .admin-calendar-grid button{min-height:60px;padding:5px}
+ .studio-redesign .admin-calendar-grid{gap:3px}
+ .studio-redesign .admin-management-panels .admin-panel{padding:16px}
+ .studio-redesign .request-card{padding:17px}
+ .studio-redesign .admin-message:not(:empty){top:75px;right:10px}
+}
+@media(prefers-reduced-motion:reduce){
+ .studio-redesign :is(.booking-work,.admin-hero,#dashboard,.form-step:not([hidden]),#receipt:not([hidden]),#day-appointments,.request-card,.admin-message:not(:empty)){animation:none!important}
+ .studio-redesign :is(button,a,.service-chevron){transition:none!important}
+ ::view-transition-old(root),::view-transition-new(root){animation:none!important}
+ html:has(.studio-redesign){scroll-behavior:auto}
+}
