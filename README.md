@@ -13,6 +13,10 @@ python scripts/check-portfolio.py
 
 Node 22 or newer is required. The build checks JavaScript syntax and static asset paths, and keeps server/database/auth source outside `dist`. Do not serve the repository root as production static content.
 
+## Joane’s private studio dashboard
+
+The private `/admin` page displays an interactive Pacific-time appointment calendar, a selected-day agenda, upcoming bookings, pending deposit approvals, confirmed appointments, time blocks, and historical records. Search by client name, phone, email, or booking reference. Joane can confirm a verified deposit, decline, cancel, reschedule, block time, or contact a client by SMS/email. Records come from the authenticated Neon booking endpoint. The dashboard lists up to 500 bookings from the backend; it does not automatically send customer notifications or verify payments. Production and isolated QA previews use different Neon branches.
+
 ## Booking status
 
 Booking is connected but remains gated by server configuration and Joane’s dashboard setting. See [BOOKING-SETUP.md](BOOKING-SETUP.md) for the required database, admin, and activation steps. Deploying the design does not enable booking or migrate the database. The form reports setup status instead of inventing availability. Inspiration uploads are browser-only previews; persistent private image uploads and Square payment processing are not implemented.

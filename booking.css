@@ -34,3 +34,80 @@
 .studio-location-value{margin:0;padding:13px 14px;min-height:48px;border:1px solid #d6bac0;background:#fffaf4;color:#681e37;font:500 16px Arial,sans-serif}
 .static-studio-location{padding:12px 0;font-size:14px;color:#542638}
 .static-studio-location strong{display:block;font-size:16px;margin-top:5px}
+
+/* Studio dashboard: responsive calendar and customer appointment management. */
+.admin-shell{max-width:1220px}
+.admin-mode{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#f9e2df;border-left:4px solid #b37c89;padding:13px 16px;margin:16px 0 22px;font-size:14px;line-height:1.5}
+.admin-mode strong{color:#681e37}
+.admin-mode.is-live{background:#e7f1e1;border-color:#6f9d72}
+.admin-mode.is-test{background:#fff1d6;border-color:#af7a27}
+.admin-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;border:0;padding:0;margin:18px 0 34px}
+.admin-stats>div{border:1px solid #e0cbd0;background:#fffaf4;border-radius:9px;padding:19px 17px}
+.admin-stats strong{color:#681e37;font-size:37px}
+.admin-stats span{display:block;line-height:1.35;color:#79545e;margin-top:5px}
+.admin-section-head{display:flex;justify-content:space-between;align-items:end;gap:18px;margin-bottom:20px}
+.admin-section-head h2{font:normal clamp(29px,3vw,38px)/1.15 Georgia,serif;margin:4px 0 8px;color:#54263c}
+.admin-section-head .eyebrow{font-size:11px;color:#96606e;letter-spacing:1.8px}
+.admin-section-head .helper{max-width:620px;margin:0}
+.admin-calendar-section{margin-bottom:44px}
+.admin-calendar-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(260px,.85fr);gap:18px}
+.admin-calendar-panel,.admin-day-panel{background:#fffaf4;border:1px solid #e0cbd0;border-radius:10px;padding:20px;min-width:0}
+.admin-calendar-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.admin-calendar-header h3{font:normal 26px/1.2 Georgia,serif;margin:0;text-align:center;color:#542638}
+.admin-calendar-header button{font-size:28px;width:45px;min-height:45px;background:#fff;border:1px solid #d6b7bf;color:#681e37;cursor:pointer;border-radius:6px}
+.admin-calendar-header button:hover,.admin-calendar-header button:focus-visible{background:#f6dce2}
+.admin-calendar-weekdays,.admin-calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.admin-calendar-weekdays{font-size:12px;text-align:center;color:#825b68;margin-bottom:7px}
+.admin-calendar-grid button{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:4px;min-width:0;min-height:72px;background:#fffdfa;border:1px solid #eedce0;border-radius:7px;padding:7px;color:#512738;cursor:pointer;text-align:left}
+.admin-calendar-grid button:hover{background:#fceef1;border-color:#b57790}
+.admin-calendar-grid button.is-other-month{opacity:.46}
+.admin-calendar-grid button.is-selected{border:2px solid #873253;background:#f9e2e8;padding:6px}
+.admin-calendar-grid button.is-today .calendar-number{background:#681e37;color:#fff;border-radius:50%;min-width:24px;text-align:center;line-height:24px}
+.calendar-number{font-size:13px;font-weight:700;min-height:24px;line-height:24px}
+.calendar-dots{display:flex;flex-wrap:wrap;gap:3px}
+.calendar-dots i,.legend-dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0;background:#b8a8aa}
+.calendar-dots .pending,.legend-dot.pending{background:#c69230}
+.calendar-dots .confirmed,.legend-dot.confirmed{background:#507b56}
+.calendar-dots .blocked,.legend-dot.blocked{background:#766875}
+.calendar-count{font-size:10px;color:#79545e}
+.admin-calendar-legend{display:flex;flex-wrap:wrap;align-items:center;gap:7px;font-size:12px;color:#725460;margin:14px 0 0}
+.admin-calendar-legend .legend-dot:not(:first-child){margin-left:9px}
+.admin-day-panel .eyebrow{font-size:11px;letter-spacing:1.6px;color:#916374}
+.admin-day-panel h3{font:normal 25px Georgia,serif;margin:8px 0 18px;color:#542638}
+.admin-day-empty{color:#755967;padding:22px 10px;text-align:center;font-size:14px;line-height:1.6}
+.admin-day-appointment{display:block;width:100%;text-align:left;background:#fff;border:1px solid #e8d5d9;border-radius:7px;padding:12px;margin-bottom:9px;color:#512738;cursor:pointer}
+.admin-day-appointment:hover{background:#fbe9ec;border-color:#b47788}
+.admin-day-appointment strong{display:block;margin:4px 0;font-size:14px}
+.admin-day-appointment small{display:block;color:#86616e;font-size:12px}
+.admin-day-appointment .status{display:inline-block;font-size:10px;margin-top:6px;padding:3px 8px}
+.admin-appointments-section{margin-bottom:35px}
+.admin-toolbar{background:#fffaf4;border:1px solid #e0cbd0;border-radius:9px;padding:14px 16px;gap:12px}
+.admin-toolbar label{font-size:12px;font-weight:700;display:grid;gap:6px;color:#684251}
+.admin-toolbar select,.admin-toolbar input{min-height:43px;border:1px solid #d3bac0;background:#fff;padding:10px 12px;font:14px Arial,sans-serif;color:#512738;border-radius:4px}
+.admin-toolbar .admin-search-label{flex:1;min-width:190px}
+.admin-toolbar #refresh,.admin-toolbar #logout{align-self:end;min-height:43px}
+.admin-list-summary{font-size:13px;color:#79545e;margin:12px 0 16px}
+.admin-list{gap:12px}
+.request-card{border:1px solid #dfcbd0;border-radius:9px;box-shadow:0 2px 10px #48203909;padding:21px;background:#fffdfa}
+.request-card:focus{outline:3px solid #af6c86;outline-offset:3px}
+.request-top{align-items:flex-start}
+.request-top h3{font-size:25px;margin:0 0 4px}
+.request-top .booking-ref{font-size:12px;color:#876976}
+.request-card .admin-when{font-weight:700;font-size:15px;color:#681e37}
+.request-card .admin-appointment-sub{color:#73525f}
+.request-card .admin-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 18px;margin:15px 0}
+.request-card .admin-card-grid p{margin:0;overflow-wrap:anywhere;line-height:1.55}
+.request-card .admin-card-grid strong{color:#5f2e45}
+.request-card .admin-notes{background:#fbecef;border-radius:7px;padding:10px 12px;margin-top:14px}
+.request-card .admin-notes p{margin:4px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.request-card .admin-card-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.request-card .admin-card-actions .button{margin:0;min-height:42px;padding:9px 14px}
+.status.pending{background:#faebcb;color:#805422}
+.status.confirmed{background:#e0efe0;color:#35653c}
+.status.canceled,.status.declined,.status.expired{background:#f3e4e6;color:#895660}
+.status.blocked{background:#ece6ef;color:#6f527c}
+.admin-management-panels{margin-top:35px;border-top:1px solid #dfcbd0}
+.admin-management-panels .admin-panel{max-width:880px}
+.admin-message:not(:empty){padding:12px 14px;background:#f8e5df;border-left:3px solid #bd8190;margin:10px 0 18px;line-height:1.5}
+@media(max-width:900px){.admin-calendar-layout{grid-template-columns:1fr}.admin-day-panel{min-height:150px}.admin-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.admin-shell{padding:28px 4%}.admin-section-head{align-items:flex-start;flex-direction:column}.admin-calendar-panel,.admin-day-panel{padding:12px}.admin-calendar-grid,.admin-calendar-weekdays{gap:3px}.admin-calendar-grid button{min-height:59px;padding:5px}.admin-calendar-grid button.is-selected{padding:4px}.calendar-count{display:none}.admin-calendar-legend{font-size:11px}.admin-stats{gap:8px}.admin-stats>div{padding:13px 10px}.admin-stats strong{font-size:30px}.admin-toolbar{align-items:stretch}.admin-toolbar label,.admin-toolbar .admin-search-label{width:100%}.admin-toolbar #refresh,.admin-toolbar #logout{flex:1}.request-card{padding:15px}.request-card .admin-card-grid{grid-template-columns:1fr}.admin-calendar-header h3{font-size:23px}}

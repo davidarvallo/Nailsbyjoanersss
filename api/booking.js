@@ -20,7 +20,7 @@ export default async function handler(req,res){
     requireAdmin(req);
     await db().query("UPDATE bookings SET status='expired',updated_at=now() WHERE status='pending' AND expires_at<=now()");
     const rows=await db().query('SELECT * FROM bookings ORDER BY start_at DESC LIMIT 500');
-    return res.status(200).json({bookings:rows,settings:await settings(),enabled:process.env.BOOKING_ENABLED==='true'});
+    return res.status(200).json({bookings:rows,settings:await settings(),enabled:process.env.BOOKING_ENABLED==='true',testMode:process.env.BOOKING_TEST_MODE==='true'});
    }
    if(query.action==='status'){
     if(!/^[A-Za-z0-9_-]{43}$/.test(query.token||''))fail('Invalid booking link.',404);
