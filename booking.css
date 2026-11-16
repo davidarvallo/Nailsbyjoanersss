@@ -21,3 +21,11 @@
 .service-choice-grid .choice input{accent-color:#681e37}
 .service-choice-grid .choice strong{font-size:14px}
 @media(max-width:650px){.service-choice-grid{grid-template-columns:1fr}.service-choice-grid .choice{padding:14px}}
+
+/* Verified Zelle QR shown only in the pending booking receipt. */
+.zelle-payment{margin:20px 0;padding:18px 16px;border:1px solid #d7b4be;background:#fff9f3;border-radius:10px;text-align:center;color:#532538}
+.zelle-payment-title{font:600 20px Georgia,serif;color:#681e37;margin:0 0 9px}
+.zelle-payment p{margin:7px 0;line-height:1.5}
+.zelle-payment img{display:block;width:min(250px,100%);height:auto;margin:16px auto;background:#fff;border:8px solid #fff;image-rendering:pixelated}
+.zelle-payment-link{display:inline-block;margin:0 auto 8px;max-width:100%;white-space:normal}
+.zelle-payment .helper{font-size:13px;color:#704b50;max-width:430px;margin:14px auto 0}
