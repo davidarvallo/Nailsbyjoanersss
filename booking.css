@@ -29,3 +29,8 @@
 .zelle-payment img{display:block;width:min(250px,100%);height:auto;margin:16px auto;background:#fff;border:8px solid #fff;image-rendering:pixelated}
 .zelle-payment-link{display:inline-block;margin:0 auto 8px;max-width:100%;white-space:normal}
 .zelle-payment .helper{font-size:13px;color:#704b50;max-width:430px;margin:14px auto 0}
+
+/* A single, non-editable San Bernardino studio location. */
+.studio-location-value{margin:0;padding:13px 14px;min-height:48px;border:1px solid #d6bac0;background:#fffaf4;color:#681e37;font:500 16px Arial,sans-serif}
+.static-studio-location{padding:12px 0;font-size:14px;color:#542638}
+.static-studio-location strong{display:block;font-size:16px;margin-top:5px}

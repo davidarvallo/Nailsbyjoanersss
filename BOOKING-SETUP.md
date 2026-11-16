@@ -7,7 +7,7 @@ The pink design, portfolio, carousel, in-page policies, and current service menu
 1. Connect a dedicated Neon PostgreSQL database to this Vercel project, with DATABASE_URL configured for the intended environment.
 2. Run npm run setup:database in a trusted environment with DATABASE_URL set.
 3. Run npm run setup:admin privately. Save its generated ADMIN_PASSWORD_HASH and SESSION_SECRET to Vercel, and give Joane her studio password privately.
-4. Deploy, sign into /admin, set verified Apple Pay/Zelle instructions and location availability.
+4. Deploy, sign into /admin, set verified Apple Pay/Zelle instructions and San Bernardino days off.
 5. Set BOOKING_ENABLED=true in the intended environment and enable requests in the admin dashboard only after testing the complete flow.
 6. Test a reservation, overlap blocking, deposit instructions, manual confirmation, private receipt, and cancellation.
 
