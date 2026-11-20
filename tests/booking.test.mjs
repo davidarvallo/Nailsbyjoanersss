@@ -65,7 +65,7 @@ test('current services reserve the complete nail and pedicure duration',()=>{
 });
 
 test('Joane photographed service menu is bookable with server-validated pricing and slots',()=>{
- assert.equal(ADDITIONAL_SERVICES.length,15);
+ assert.equal(ADDITIONAL_SERVICES.length,17);
  const expected={
   manicure:35,'builder-gel-mani':40,'hard-gel-mani':50,'acrylic-overlay':55,
   'short-acrylic-set':60,'medium-acrylic-set':65,'med-long-acrylic-set':75,
@@ -76,7 +76,7 @@ test('Joane photographed service menu is bookable with server-validated pricing 
   assert.equal(service.duration,120,service.id);
   assert.equal(nailArtEligible(service.id),true,service.id);
   assert.equal(durationFor(service.id,'none'),120,service.id);
-  if(service.id==='long-acrylic-set'){
+  if(['long-acrylic-set','xl-acrylic-set','xxl-plus-acrylic-set'].includes(service.id)){
    assert.equal(service.price,null);
    assert.equal(service.estimate,true);
   } else assert.equal(service.price,expected[service.id],service.id);
