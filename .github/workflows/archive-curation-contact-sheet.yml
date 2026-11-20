@@ -1,0 +1,33 @@
+name: Curate Joane archive photo thumbnails
+on:
+  push:
+    branches: [qa/booking-end-to-end]
+permissions: {contents: read}
+jobs:
+  contact-sheet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Pillow
+        run: python -m pip install pillow
+      - name: List and preview actual archive images
+        shell: python
+        run: |
+          import io,zipfile,base64
+          from PIL import Image,ImageOps,ImageDraw
+          with zipfile.ZipFile('Nailsbtjoanersss.zip') as z:
+            entries=[(n,z.read(n)) for n in z.namelist() if n.lower().endswith(('.jpg','.jpeg','.png','.webp')) and 'service' not in n.lower() and not n.startswith('__MACOSX')]
+          sheet=Image.new('RGB',(1500,((len(entries)+4)//5)*285),'#ffffff')
+          draw=ImageDraw.Draw(sheet)
+          for i,(name,data) in enumerate(entries):
+            im=ImageOps.exif_transpose(Image.open(io.BytesIO(data))).convert('RGB')
+            im.thumbnail((270,238))
+            x=(i%5)*300+(300-im.width)//2
+            y=(i//5)*285
+            sheet.paste(im,(x,y))
+            draw.text((x,y+240),f'{i+1}: {name.split("/")[-1][:22]}',fill='black')
+          buf=io.BytesIO();sheet.save(buf,'JPEG',quality=66,optimize=True)
+          print('CONTACT_SHEET_BEGIN')
+          print(base64.b64encode(buf.getvalue()).decode())
+          print('CONTACT_SHEET_END')
