@@ -318,3 +318,15 @@
  ::view-transition-old(root),::view-transition-new(root){animation:none!important}
  html:has(.studio-redesign){scroll-behavior:auto}
 }
+
+/* Booking preferences and transparent per-service deposits. */
+.studio-redesign .appointment-preferences{margin:22px 0;border:1px solid #e5d1d8;border-radius:12px;background:#fffaf7;padding:18px 20px}
+.studio-redesign .appointment-preferences legend{font-size:18px;color:#532f43;font-weight:750;padding:0 7px}
+.studio-redesign .appointment-preferences .check{display:flex;gap:12px;align-items:flex-start;font-size:14px;font-weight:500}
+.studio-redesign .appointment-preferences .check strong,.studio-redesign #freestyle-check strong{color:#62233e}
+.studio-redesign #freestyle-check{margin-top:14px;display:flex;gap:12px;align-items:flex-start;font-size:14px;font-weight:500}
+.studio-redesign #freestyle-check[hidden]{display:none!important}
+.studio-redesign .deposit-breakdown{display:grid;gap:7px;margin:10px 0 13px;font-size:13px;color:#63384d}
+.studio-redesign .deposit-breakdown>div{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.studio-redesign .deposit-breakdown strong{font-size:14px;color:#63283f}
+@media(max-width:640px){.studio-redesign .appointment-preferences{padding:14px}}

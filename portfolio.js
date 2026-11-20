@@ -81,7 +81,7 @@
       const categoryLabel = document.createElement('small');
       categoryLabel.textContent = photo.category === 'nails' ? 'NAIL ART' : 'PEDICURE';
       const title = document.createElement('strong');
-      title.textContent = photo.title || titles[photo.id] || 'Made by Joane';
+      title.textContent = photo.title || titles[photo.id] || 'Made by me';
       text.append(categoryLabel, title);
       if (featured) {
         const note = document.createElement('span');
