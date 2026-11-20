@@ -56,7 +56,7 @@ test('policies, customer receipts and homepage match new deposits and Joane firs
  }
  assert.match(book,/Silent visits &amp; freestyle designs/);
  assert.match(js,/AWAITING APPROVAL/);
- assert.match(js,/I've approved your visit/);
+ assert.match(js,/approved your visit and verified your deposit/);
  assert.doesNotMatch(js,/deposit===35/);
 });
 
