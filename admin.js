@@ -148,6 +148,8 @@ function bookingCard(b){
   d.pedicure?'<p><strong>Pedicure:</strong> '+esc(serviceName(d.pedicure))+'</p>':'',
   d.removal?'<p><strong>Removal:</strong> Requested</p>':'',
   d.shapeChange?'<p><strong>Shape change:</strong> Requested (+$5)</p>':'',
+  d.freestyleDesign?'<p><strong>Design preference:</strong> Freestyle · artist chooses</p>':'',
+  d.silentAppointment?'<p><strong>Visit preference:</strong> Silent / minimal conversation</p>':'',
   d.service?'<p><strong>Deposit:</strong> '+esc(cash(d.deposit))+' · '+(b.deposit_verified?'Verified':'Not verified')+'</p>':'',
   d.phone?'<p><strong>Mobile:</strong> '+esc(d.phone)+'</p>':'',
   d.email?'<p><strong>Email:</strong> '+esc(d.email)+'</p>':''

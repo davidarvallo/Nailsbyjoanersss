@@ -1,4 +1,4 @@
-import {SERVICES,TIERS,TIMES,validateSlot,displayTime,durationFor,dateInLA,monthLimit,PEDICURES,validateSeason,nailArtEligible} from './booking-config.js';
+import {SERVICES,TIERS,TIMES,validateSlot,displayTime,durationFor,dateInLA,monthLimit,PEDICURES,validateSeason,nailArtEligible,depositForBooking} from './booking-config.js';
 const $=s=>document.querySelector(s),form=$('#booking-form');let step=0,chosenTime='',open=false,activeToken='',config={};let slotVersion=0;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function api(url,options){const r=await fetch(url,options);const data=await r.json();if(!r.ok)throw new Error(data.error||'Please try again.');return data;}
@@ -10,7 +10,7 @@ $('#services-options').innerHTML=groupedOrder.map(group=>{
  const list=menuServices.filter(s=>groupFor(s)===group);
  if(!list.length)return '';
  return '<fieldset class="service-choice-group"><legend>'+esc(group)+'</legend><div class="service-choice-grid">'+list.map(s=>
-  '<label class="choice"><input type="radio" name="service" value="'+esc(s.id)+'"><strong>'+esc(s.name)+'</strong><span>'+(s.price===null?'Price confirmed by Joane':s.price===undefined?'Price quoted by Joane':'$'+s.price)+' · '+(s.estimate?'estimated ':'')+(s.duration/60)+' hr</span></label>'
+  '<label class="choice"><input type="radio" name="service" value="'+esc(s.id)+'"><strong>'+esc(s.name)+'</strong><span>'+(s.price===null?'Price confirmed with me':s.price===undefined?'Price quoted with me':'$'+s.price)+' · '+(s.estimate?'estimated ':'')+(s.duration/60)+' hr</span></label>'
  ).join('')+'</div></fieldset>';
 }).join('');
 form.elements.service.value=menuServices.some(s=>s.id===initial.get('service'))?initial.get('service'):'short-acrylic-set';
@@ -31,11 +31,13 @@ function sync(){
  $('#length-field').hidden=noArt||Boolean(service?.menuGroup);
  $('#art-field').hidden=noArt;
  $('#removal-check').hidden=!removable;
+ $('#freestyle-check').hidden=noArt;
  if(!removable)form.elements.removal.checked=false;
- if(noArt){form.elements.tier.value='none';form.elements.pedicure.value='';}
- const data=values();const duration=durationFor(data.service,data.tier,data.service==='acrylic-soak'?false:data.removal,data.pedicure);const tier=TIERS.find(t=>t.id===data.tier);const deposit=chosenTime==='06:00'?35:20;
- $('#summary').innerHTML=[['Service',service.name],['Nail art',noArt?'Not applicable':tier.id==='none'?'Solid color included':`${tier.name} (${tier.price})`],['Time reserved',`${Math.floor(duration/60)}h ${duration%60||''}${duration%60?'m':''}${service.estimate?' (estimate)':''}`],['Pedicure',PEDICURES.find(s=>s.id===data.pedicure)?.name||'No additional pedicure'],['Service price',service.price===null||service.price===undefined?'Confirmed by Joane':`$${service.price} base`],['Location',data.location],['Date',data.date||'To be chosen'],['Time',chosenTime?displayTime(chosenTime):'To be chosen']].map(([k,v])=>`<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('');
- $('#deposit-amount').textContent=`$${deposit}`;$('#deposit-note').textContent=deposit===35?'Includes the $15 early appointment fee.':'Applied toward your appointment.';
+ if(noArt){form.elements.tier.value='none';form.elements.pedicure.value='';form.elements.freestyleDesign.checked=false;}
+ const data=values();const duration=durationFor(data.service,data.tier,data.service==='acrylic-soak'?false:data.removal,data.pedicure);const tier=TIERS.find(t=>t.id===data.tier);const breakdown=depositForBooking(chosenTime,data.pedicure);const deposit=breakdown.total;
+ $('#summary').innerHTML=[['Service',service.name],['Nail art',noArt?'Not applicable':tier.id==='none'?'Solid color included':`${tier.name} (${tier.price})`],['Time reserved',`${Math.floor(duration/60)}h ${duration%60||''}${duration%60?'m':''}${service.estimate?' (estimate)':''}`],['Pedicure',PEDICURES.find(s=>s.id===data.pedicure)?.name||'No additional pedicure'],['Service price',service.price===null||service.price===undefined?'Price confirmed with me':`$${service.price} base`],['Location',data.location],['Date',data.date||'To be chosen'],['Time',chosenTime?displayTime(chosenTime):'To be chosen'],...(form.elements.freestyleDesign.checked?[['Design preference','Freestyle — I choose your design']]:[]),...(form.elements.silentAppointment.checked?[['Appointment style','Quiet / silent appointment']]:[])].map(([k,v])=>`<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('');
+ $('#deposit-amount').textContent=`$${deposit}`;$('#deposit-note').textContent='Applied toward your appointment; I confirm deposits manually.';
+ $('#deposit-breakdown').innerHTML='<div><span>'+breakdown.serviceCount+' '+(breakdown.serviceCount===1?'service':'services')+' × $20</span><strong>$'+breakdown.serviceDeposits+'</strong></div>'+(breakdown.earlyFee?'<div><span>6 AM early appointment</span><strong>$15</strong></div>':'');
 }
 function showStep(n){step=n;document.querySelectorAll('[data-step]').forEach(el=>el.hidden=Number(el.dataset.step)!==step);document.querySelectorAll('[data-step-indicator]').forEach(el=>el.classList.toggle('active',Number(el.dataset.stepIndicator)===step));$('#back').hidden=step===0;$('#next').hidden=step===2;$('#submit-booking').hidden=step!==2;$('#next').textContent=step===0?'Choose a time':'Your details';$('#form-error').textContent='';document.querySelector(`[data-step="${step}"] h2`).setAttribute('tabindex','-1');document.querySelector(`[data-step="${step}"] h2`).focus({preventScroll:true});}
 function renderSlots(times){
@@ -44,34 +46,34 @@ function renderSlots(times){
 async function loadSlots(){
  chosenTime='';sync();const version=++slotVersion;$('#slot-options').replaceChildren();const v=values();if(!v.date){$('#slot-message').textContent='Choose a date to check availability.';return;}
  try{validateSeason(v.service,v.date);}catch(e){$('#slot-message').textContent=e.message;return;}
- if(!open){$('#slot-message').textContent='Online booking is being prepared. Text Joane to arrange an appointment.';return;}
+ if(!open){$('#slot-message').textContent='Online booking is being prepared. Text me to arrange an appointment.';return;}
  $('#slot-message').textContent='Checking availability…';
  try{
   const data=await api(`/api/booking?${new URLSearchParams({...v,action:'availability'})}`);if(version!==slotVersion)return;
-  $('#slot-message').textContent=data.slots.length?'Choose a start time. Your request will hold the full appointment duration.':'No online times available for this date and location. Try another date or text Joane.';
+  $('#slot-message').textContent=data.slots.length?'Choose a start time. Your request will hold the full appointment duration.':'No times available on this date. Try another date or text me.';
   renderSlots(data.slots);
  }catch(error){if(version===slotVersion)$('#slot-message').textContent=error.message;}
 }
 form.addEventListener('change',e=>{sync();if(['date','location','service','tier','removal','pedicure'].includes(e.target.name))loadSlots();});
-$('#next').addEventListener('click',()=>{const v=values();if(step===1&&!chosenTime){$('#form-error').textContent=open?'Choose an available appointment time first.':'Online booking is not open yet. Text Joane to arrange an appointment.';return;}showStep(step+1);});
+$('#next').addEventListener('click',()=>{const v=values();if(step===0&&form.elements.freestyleDesign.checked&&v.tier==='none'){$('#form-error').textContent='For a freestyle design, please select a nail-art tier first.';return;}if(step===1&&!chosenTime){$('#form-error').textContent=open?'Choose an available appointment time first.':'Online booking is not open yet. Text me to arrange an appointment.';return;}showStep(step+1);});
 $('#back').addEventListener('click',()=>showStep(step-1));
 form.addEventListener('submit',async e=>{
- e.preventDefault();if(!open||!chosenTime){$('#form-error').textContent='Online booking is not available yet. Please text Joane.';return;}
+ e.preventDefault();if(!open||!chosenTime){$('#form-error').textContent='Online booking is not available yet. Please text me.';return;}
  const button=$('#submit-booking');button.disabled=true;button.textContent='Sending request…';$('#form-error').textContent='';
  try{
-  const body=Object.fromEntries(new FormData(form));['removal','shapeChange','acceptPolicies'].forEach(k=>body[k]=form.elements[k].checked);body.removal=body.service==='acrylic-soak'||body.removal;Object.assign(body,{action:'reserve',time:chosenTime});
+  const body=Object.fromEntries(new FormData(form));['removal','shapeChange','acceptPolicies','silentAppointment','freestyleDesign'].forEach(k=>body[k]=form.elements[k].checked);body.removal=body.service==='acrylic-soak'||body.removal;Object.assign(body,{action:'reserve',time:chosenTime});
   const result=await api('/api/booking',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});activeToken=result.token;history.replaceState(null,'',`/book#${activeToken}`);
   $('#payment-instructions').textContent=result.paymentInstructions;await loadReceipt();
  }catch(error){$('#form-error').textContent=error.message;}finally{button.disabled=false;button.textContent='Send appointment request';}
 });
 async function loadReceipt(){
  const data=await api(`/api/booking?action=status&token=${encodeURIComponent(activeToken)}`);form.hidden=true;$('.progress').hidden=true;$('#receipt').hidden=false;
- const labels={pending:['AWAITING JOANE’S APPROVAL','Your request is in.','Send your deposit before the hold expires. Joane will review your request and contact you.'],confirmed:['CONFIRMED','See you soon.','Joane has approved your visit and verified your deposit. Contact her directly for changes.'],expired:['HOLD EXPIRED','Your hold has ended.','The unpaid hold has been released. Please request a new time or text Joane.'],declined:['REQUEST DECLINED','Let’s find another time.','Joane couldn’t accept this request. Contact her to discuss another visit.'],canceled:['CANCELED','Your visit was canceled.','If Joane canceled, you can choose a deposit refund or transfer. Contact her to arrange it.']};
+ const labels={pending:['AWAITING APPROVAL','Your request is in.','Send your deposit before the hold expires. I'll review your request and contact you.'],confirmed:['CONFIRMED','See you soon.','I've approved your visit and verified your deposit. Contact me directly for changes.'],expired:['HOLD EXPIRED','Your hold has ended.','The unpaid hold has been released. Please request a new time or text me.'],declined:['REQUEST DECLINED','Let’s find another time.','I couldn't accept this request. Contact me to discuss another visit.'],canceled:['CANCELED','Your visit was canceled.','If I canceled, you can choose a deposit refund or transfer. Contact me to arrange it.']};
  const [status,title,copy]=labels[data.status]||['BOOKING STATUS','Your visit','Contact Joane for details.'];$('#receipt-status').textContent=status;$('#receipt-title').textContent=title;$('#receipt-copy').textContent=copy;
  const date=new Intl.DateTimeFormat('en-US',{timeZone:'America/Los_Angeles',dateStyle:'full',timeStyle:'short'}).format(new Date(data.start));
- $('#receipt-details').innerHTML=`<p><strong>${esc(date)} Pacific</strong></p><p>${esc(data.location)}</p><p>${esc(SERVICES.find(s=>s.id===data.service)?.name||'Nail appointment')}</p>${data.pedicure?`<p>Plus ${esc(PEDICURES.find(s=>s.id===data.pedicure)?.name||'pedicure')}</p>`:''}<p>Deposit: $${Number(data.deposit)} · Reference ${esc(data.id)}</p>`;
- $('#payment-panel').hidden=data.status!=='pending';if(config.testMode){$('#payment-panel h3').textContent='Test appointment: no payment needed';$('#payment-panel .zelle-payment')?.setAttribute('hidden','');$('#payment-instructions').textContent='TEST ONLY. Do not send any deposit for this appointment.';}$('#expiry-message').textContent=`Hold ends: ${new Intl.DateTimeFormat('en-US',{timeZone:'America/Los_Angeles',dateStyle:'medium',timeStyle:'short'}).format(new Date(data.expires))} Pacific. Paying alone does not confirm the visit; Joane verifies it.`;
- if(!$('#payment-instructions').textContent)$('#payment-instructions').textContent=config.paymentInstructions||'Text Joane at 909-496-9487 for verified Apple Pay or Zelle instructions.';
+ $('#receipt-details').innerHTML=`<p><strong>${esc(date)} Pacific</strong></p><p>${esc(data.location)}</p><p>${esc(SERVICES.find(s=>s.id===data.service)?.name||'Nail appointment')}</p>${data.pedicure?`<p>Plus ${esc(PEDICURES.find(s=>s.id===data.pedicure)?.name||'pedicure')}</p>`:''}${data.freestyleDesign?'<p>Freestyle design requested</p>':''}${data.silentAppointment?'<p>Quiet appointment requested</p>':''}<p>Deposit: $${Number(data.deposit)} · Reference ${esc(data.id)}</p>`;
+ $('#payment-panel').hidden=data.status!=='pending';if(config.testMode){$('#payment-panel h3').textContent='Test appointment: no payment needed';$('#payment-panel .zelle-payment')?.setAttribute('hidden','');$('#payment-instructions').textContent='TEST ONLY. Do not send any deposit for this appointment.';}$('#expiry-message').textContent=`Hold ends: ${new Intl.DateTimeFormat('en-US',{timeZone:'America/Los_Angeles',dateStyle:'medium',timeStyle:'short'}).format(new Date(data.expires))} Pacific. Paying alone does not confirm your visit; I verify it.`;
+ if(!$('#payment-instructions').textContent)$('#payment-instructions').textContent=config.paymentInstructions||'Text me at 909-496-9487 for verified Apple Pay or Zelle instructions.';
  $('#copy-link').onclick=async()=>{try{await navigator.clipboard.writeText(location.href);$('#copy-link').textContent='Link copied';}catch{$('#receipt-copy').textContent='Copy the private link from your browser address bar.';}};
 }
 $('#refresh-status').addEventListener('click',()=>loadReceipt().catch(e=>$('#receipt-copy').textContent=e.message));
@@ -83,7 +85,7 @@ try{
  form.elements.date.min=config.minDate;form.elements.date.max=config.maxDate;
  $('#submit-booking').disabled=!open;
  if(config.testMode){$('#setup-message').hidden=false;$('#setup-message').textContent='TEST SITE. These are practice appointments. Do not send deposits.';}
- if(!open){$('#setup-message').hidden=false;$('#setup-message').textContent='Online booking is being prepared. Text Joane at 909-496-9487 to arrange your visit.';}
-}catch{open=false;$('#setup-message').hidden=false;$('#setup-message').textContent='Online booking is temporarily unavailable. Text Joane at 909-496-9487.';}
+ if(!open){$('#setup-message').hidden=false;$('#setup-message').textContent='Online booking is being prepared. Text me at 909-496-9487 to arrange your visit.';}
+}catch{open=false;$('#setup-message').hidden=false;$('#setup-message').textContent='Online booking is temporarily unavailable. Text me at 909-496-9487.';}
 if(form.elements.date.value)await loadSlots();
 const fragment=location.hash.slice(1);if(/^[A-Za-z0-9_-]{43}$/.test(fragment)){activeToken=fragment;try{await loadReceipt();}catch(e){$('#setup-message').hidden=false;$('#setup-message').textContent=e.message;}}

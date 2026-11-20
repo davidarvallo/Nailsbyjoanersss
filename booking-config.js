@@ -12,6 +12,8 @@ export const ADDITIONAL_SERVICES = [
   {"id":"medium-acrylic-set","name":"Medium Acrylic Set","duration":120,"price":65,"menuGroup":"Acrylic Sets","nailArt":true},
   {"id":"med-long-acrylic-set","name":"Med-Long Acrylic Set","duration":120,"price":75,"menuGroup":"Acrylic Sets","nailArt":true},
   {"id":"long-acrylic-set","name":"Long Acrylic Set","duration":120,"price":null,"estimate":true,"menuGroup":"Acrylic Sets","nailArt":true},
+  {"id":"xl-acrylic-set","name":"XL Acrylic Set","duration":120,"price":null,"estimate":true,"menuGroup":"Acrylic Sets","nailArt":true},
+  {"id":"xxl-plus-acrylic-set","name":"XXL+ Acrylic Set","duration":120,"price":null,"estimate":true,"menuGroup":"Acrylic Sets","nailArt":true},
   {"id":"acrylic-overlay-fill","name":"Acrylic Overlay Fill","duration":120,"price":45,"menuGroup":"Fills","nailArt":true},
   {"id":"short-set-fill","name":"Short Set Fill","duration":120,"price":50,"menuGroup":"Fills","nailArt":true},
   {"id":"medium-set-fill","name":"Medium Set Fill","duration":120,"price":55,"menuGroup":"Fills","nailArt":true},
@@ -39,6 +41,14 @@ export const TIERS = [
   {id:'tier4',name:'Tier 4 · Your statement set',price:'$40+'}
 ];
 export const PEDICURES = SERVICES.filter(s=>s.id.startsWith('pedi'));
+// Every booked service requires a $20 deposit. A 6 AM start adds one $15 early fee.
+export function depositForBooking(time,pedicure='') {
+ if(pedicure && !PEDICURES.some(s=>s.id===pedicure))throw new Error('Choose a valid pedicure.');
+ const serviceCount=pedicure?2:1;
+ const serviceDeposits=serviceCount*20;
+ const earlyFee=time==='06:00'?15:0;
+ return {serviceCount,serviceDeposits,earlyFee,total:serviceDeposits+earlyFee};
+}
 export function validateSeason(service,date){
  if(service==='fall-pedi' && (date<'2026-10-01'||date>'2026-11-30')) throw new Error('Fall packages are available October 1–November 30, 2026.');
 }

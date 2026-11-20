@@ -1,11 +1,11 @@
 import {db,configured,limit,settings} from '../lib/db.js';
 import {hash,randomToken,verifyPassword,session,cookie,requireAdmin,sameOrigin} from '../lib/auth.js';
-import {LOCATIONS,TIMES,SERVICES,TIERS,validateSlot,durationFor,holdExpiry,localInstant,dateInLA,monthLimit,validateSeason} from '../booking-config.js';
+import {LOCATIONS,TIMES,SERVICES,TIERS,validateSlot,durationFor,holdExpiry,localInstant,dateInLA,monthLimit,validateSeason,depositForBooking,nailArtEligible} from '../booking-config.js';
 const fail=(message,status=400)=>{throw Object.assign(new Error(message),{status});};
 function clean(value,max=100){if(typeof value!=='string'||value.trim().length>max)fail('Please check your details.');return value.trim();}
 function selected(value,list){if(!list.includes(value))fail('Please choose a valid option.');return value;}
 function endAt(start,duration){return new Date(start.valueOf()+duration*60000);}
-function receipt(b){return {id:b.id,status:b.status,start:b.start_at,end:b.end_at,expires:b.expires_at,deposit:b.data.deposit,location:b.data.location,service:b.data.service,tier:b.data.tier,pedicure:b.data.pedicure,depositVerified:b.deposit_verified};}
+function receipt(b){return {id:b.id,status:b.status,start:b.start_at,end:b.end_at,expires:b.expires_at,deposit:b.data.deposit,location:b.data.location,service:b.data.service,tier:b.data.tier,pedicure:b.data.pedicure,silentAppointment:b.data.silentAppointment===true,freestyleDesign:b.data.freestyleDesign===true,depositVerified:b.deposit_verified};}
 export default async function handler(req,res){
  res.setHeader('Cache-Control','no-store');res.setHeader('X-Content-Type-Options','nosniff');
  try{
@@ -92,9 +92,13 @@ export default async function handler(req,res){
   const removal=service==='acrylic-soak'||body.removal===true;const pedicure=clean(body.pedicure||'',30);validateSeason(service,date);const duration=durationFor(service,tier,service==='acrylic-soak'?false:removal,pedicure);
   if(service==='soak'&&tier!=='none')fail('Nail-art tiers apply to sets and fills.');
   if(body.acceptPolicies!==true)fail('Please review and accept the booking policies.');
+  const freestyleDesign=body.freestyleDesign===true;
+  const silentAppointment=body.silentAppointment===true;
+  if(freestyleDesign&&!nailArtEligible(service))fail('Freestyle design is available only with eligible nail services.');
+  if(freestyleDesign&&tier==='none')fail('Choose a nail-art tier for your freestyle design.');
   const name=clean(body.name,100);const phone=clean(body.phone,30);const email=clean(body.email||'',150);
   if(name.length<2||phone.replace(/\D/g,'').length<10||phone.replace(/\D/g,'').length>15||(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)))fail('Enter a valid name, phone number, and email if provided.');
-  const data={service,servicePrice:SERVICES.find(s=>s.id===service)?.price??null,tier,location,removal,pedicure,duration,name,phone,email,length:clean(body.length||'',40),shapeChange:body.shapeChange===true,notes:clean(body.notes||'',1000),deposit:time==='06:00'?35:20,policiesVersion:'2026-10-04',acceptPolicies:true};
+  const data={service,servicePrice:SERVICES.find(s=>s.id===service)?.price??null,tier,location,removal,pedicure,duration,name,phone,email,length:clean(body.length||'',40),shapeChange:body.shapeChange===true,notes:clean(body.notes||'',1000),silentAppointment,freestyleDesign,deposit:depositForBooking(time,pedicure).total,policiesVersion:'2026-11-20',acceptPolicies:true};
   const token=randomToken();const id=randomToken().slice(0,12);const expiry=holdExpiry();
   const result=await db().query('SELECT reserve_booking($1,$2,$3,$4,$5,$6::jsonb) AS result',[id,hash(token),start.toISOString(),endAt(start,duration).toISOString(),expiry.toISOString(),JSON.stringify(data)]);
   if(result[0].result!=='ok')fail('That time was just taken. Please choose another slot.',409);

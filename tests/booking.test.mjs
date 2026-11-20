@@ -1,6 +1,6 @@
 import {test} from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
 import {PGlite} from '@electric-sql/pglite';
-import {validateSlot,localInstant,holdExpiry,monthLimit,durationFor,ADDITIONAL_SERVICES,nailArtEligible,LOCATIONS} from '../booking-config.js';
+import {validateSlot,localInstant,holdExpiry,monthLimit,durationFor,ADDITIONAL_SERVICES,nailArtEligible,LOCATIONS,depositForBooking} from '../booking-config.js';
 import {authorized,cookie,session,verifyPassword} from '../lib/auth.js';
 import {scryptSync} from 'node:crypto';
 test('Pacific booking rules, month boundaries and DST',()=>{
@@ -85,4 +85,18 @@ test('Joane photographed service menu is bookable with server-validated pricing 
  assert.equal(durationFor('short-acrylic-set','none',true),150);
  assert.equal(durationFor('builder-gel-mani','none',false,'pedi1'),165);
  assert.throws(()=>durationFor('bad-service','none'));
+});
+
+test('Deposits: $20 per service and single $15 6 AM fee',()=>{
+ assert.deepEqual(depositForBooking('08:30'),{serviceCount:1,serviceDeposits:20,earlyFee:0,total:20});
+ assert.deepEqual(depositForBooking('06:00'),{serviceCount:1,serviceDeposits:20,earlyFee:15,total:35});
+ assert.deepEqual(depositForBooking('11:30','pedi1'),{serviceCount:2,serviceDeposits:40,earlyFee:0,total:40});
+ assert.deepEqual(depositForBooking('06:00','pedi2'),{serviceCount:2,serviceDeposits:40,earlyFee:15,total:55});
+ assert.throws(()=>depositForBooking('06:00','unknown'));
+});
+test('XL and XXL+ acrylic sets are selectable with provisional unpriced durations',()=>{
+ const xl=ADDITIONAL_SERVICES.find(s=>s.id==='xl-acrylic-set');const xxl=ADDITIONAL_SERVICES.find(s=>s.id==='xxl-plus-acrylic-set');
+ assert.equal(xl.name,'XL Acrylic Set');assert.equal(xl.price,null);assert.equal(xl.estimate,true);
+ assert.equal(xxl.name,'XXL+ Acrylic Set');assert.equal(xxl.price,null);assert.equal(xxl.estimate,true);
+ assert.equal(durationFor(xxl.id,'none'),120);
 });

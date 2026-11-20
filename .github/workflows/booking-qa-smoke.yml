@@ -20,6 +20,25 @@ jobs:
         run: npm test
       - name: Verify production-style static build
         run: npm run build
+      - name: Verify hand nail examples are removed from pedicure category
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import {readFileSync} from 'node:fs';
+          import {runInNewContext} from 'node:vm';
+          const window={};
+          runInNewContext(readFileSync('dist/portfolio-data.js','utf8'),{window});
+          const archive=window.PORTFOLIO_PHOTOS.filter(p=>p.id.startsWith('joane-'));
+          const pedis=archive.filter(p=>p.category==='pedicures');
+          const nails=archive.filter(p=>p.category==='nails');
+          assert.equal(archive.length,15);
+          assert.equal(pedis.length,11);
+          assert.equal(nails.length,4);
+          for(const name of ['image10.jpg','image15.jpg','image6.jpg','image9.jpg']){
+            assert.equal(nails.find(p=>p.source.toLowerCase()===name)?.category,'nails',name);
+          }
+          console.log('Archive categories verified: 11 pedicures, 4 nail sets.');
+          JS
       - name: Verify QA safety code and assets
         run: |
           node --input-type=module <<'JS'

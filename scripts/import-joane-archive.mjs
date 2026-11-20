@@ -76,25 +76,34 @@ function imageSize(bytes,extension) {
 export function importJoaneArchive(archive='Nailsbtjoanersss.zip',dist='dist') {
   const all=archiveImages(archive);
   const menus=all.filter(f=>/services?/i.test(f.filename)).sort((a,b)=>a.filename.localeCompare(b.filename,undefined,{numeric:true}));
-  const pedicures=[...new Map(all.filter(f=>!/services?/i.test(f.filename)).map(f=>[f.hash,f])).values()];
+  const archivePhotos=[...new Map(all.filter(f=>!/services?/i.test(f.filename)).map(f=>[f.hash,f])).values()];
+  // Verified against the full archive contact sheet: these four photos show fingernails, not toes.
+  const nailOnlyFiles=new Set(['image10.jpg','image15.jpg','image6.jpg','image9.jpg']);
+  const handSets=archivePhotos.filter(f=>nailOnlyFiles.has(f.filename.toLowerCase()));
+  if(handSets.length!==4)throw Error('Expected exactly four confirmed nail-set photos from the archive.');
   if(menus.length!==2)throw Error('Expected 2 service images; ZIP contains '+menus.length);
-  if(!pedicures.length)throw Error('No pedicure images found in ZIP');
+  if(!archivePhotos.length)throw Error('No portfolio images found in ZIP');
   function save(folder,name,bytes) {
     const file=join(dist,'public','images',folder,name);
     mkdirSync(dirname(file),{recursive:true});
     writeFileSync(file,bytes);
     return '/public/images/'+folder+'/'+name;
   }
-  const photos=pedicures.map((photo,i)=>{
-    const id='joane-pedicure-'+slug(photo.filename)+'-'+photo.hash.slice(0,8);
-    const url=save('pedicures',id+'.'+photo.extension,photo.bytes);
+  let pediIndex=0,nailIndex=0;
+  const photos=archivePhotos.map(photo=>{
+    const isNails=nailOnlyFiles.has(photo.filename.toLowerCase());
+    const category=isNails?'nails':'pedicures';
+    const index=isNails?++nailIndex:++pediIndex;
+    const id='joane-'+(isNails?'nail':'pedicure')+'-'+slug(photo.filename)+'-'+photo.hash.slice(0,8);
+    const url=save(category,id+'.'+photo.extension,photo.bytes);
     const [width,height]=imageSize(photo.bytes,photo.extension);
-    return {id,category:'pedicures',title:'Pedicure inspiration '+(i+1),alt:'Pedicure design by Joane, look '+(i+1),source:photo.filename,url,width,height};
+    const kind=isNails?'Nail set':'Pedicure';
+    return {id,category,title:kind+' inspiration '+index,alt:kind+' design, look '+index,source:photo.filename,url,width,height};
   });
-  appendFileSync(join(dist,'portfolio-data.js'),'\n// New pedicures, imported from Nailsbtjoanersss.zip at build time.\nwindow.PORTFOLIO_PHOTOS.push(...'+JSON.stringify(photos)+');\n');
+  appendFileSync(join(dist,'portfolio-data.js'),'\n// Curated archive: genuine pedicure photos and four fingernail sets.\nwindow.PORTFOLIO_PHOTOS.push(...'+JSON.stringify(photos)+');\n');
   // The two service screenshots are used as reference material only.
   // Their verified offerings are editable booking choices in booking-config.js.
   // Do not publish or inject screenshots of the menu into the site.
-  console.log('New archive: '+photos.length+' pedicure photos; services use the booking menu.');
-  return {pedicures:photos.length,menus:0};
+  console.log('Curated archive: '+pediIndex+' pedicure photos, '+nailIndex+' nail-set photos; services use the booking menu.');
+  return {pedicures:pediIndex,nails:nailIndex,menus:0};
 }
